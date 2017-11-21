@@ -1,5 +1,7 @@
 const glslify = require('glslify');
 
+import Tetrahedron from './shapes/Tetrahedron';
+
 export default class WebGLView {
 
 	constructor(view) {
@@ -9,6 +11,7 @@ export default class WebGLView {
 		this.initThree();
 		this.initControls();
 		this.initObject();
+		this.initTetrahedron();
 	}
 
 	initThree() {
@@ -47,6 +50,11 @@ export default class WebGLView {
 
 		const mesh = new THREE.Mesh(geometry, material);
 		this.scene.add(mesh);
+	}
+
+	initTetrahedron() {
+		const tetrahedron = new Tetrahedron();
+		this.scene.add(tetrahedron.object3D);
 	}
 
 	// ---------------------------------------------------------------------------------------------
