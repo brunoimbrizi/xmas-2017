@@ -1,3 +1,4 @@
+import * as THREE from 'three';
 import Sketch from 'sketch-js';
 
 import WebGLView from './webgl/WebGLView';

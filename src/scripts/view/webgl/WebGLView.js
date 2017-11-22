@@ -1,6 +1,8 @@
 const glslify = require('glslify');
+import * as THREE from 'three';
+import TrackballControls from 'three-trackballcontrols';
 
-import Tetrahedron from './shapes/Tetrahedron';
+import Triangle from './shapes/Triangle';
 
 export default class WebGLView {
 
@@ -11,7 +13,7 @@ export default class WebGLView {
 		this.initThree();
 		this.initControls();
 		this.initObject();
-		this.initTetrahedron();
+		this.initTriangle();
 	}
 
 	initThree() {
@@ -24,7 +26,7 @@ export default class WebGLView {
 	}
 
 	initControls() {
-		this.controls = new THREE.TrackballControls(this.camera, this.renderer.domElement);
+		this.controls = new TrackballControls(this.camera, this.renderer.domElement);
 		this.controls.target.set(0, 0, 0);
 		this.controls.rotateSpeed = 2.0;
 		this.controls.zoomSpeed = 0.8;
@@ -52,9 +54,9 @@ export default class WebGLView {
 		this.scene.add(mesh);
 	}
 
-	initTetrahedron() {
-		const tetrahedron = new Tetrahedron();
-		this.scene.add(tetrahedron.object3D);
+	initTriangle() {
+		this.triangle = new Triangle();
+		this.scene.add(this.triangle.object3D);
 	}
 
 	// ---------------------------------------------------------------------------------------------
