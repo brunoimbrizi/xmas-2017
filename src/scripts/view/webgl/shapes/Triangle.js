@@ -12,22 +12,42 @@ export default class Triangle {
 	}
 
 	initTriangle() {
-		const rows = 3;
+		this.data = [];
 
+		const rows = 2;
+		const cols = rows * 2 - 1;
+
+		let col, row = 0;
 		let index = 0;
-		let str = '';
+		let str = '\n    ';
+		let data;
 
-		// Floyd's triangle
-		for (let i = 1; i <= rows; i++) {
-			for (let j = 1; j <= i; ++j) {
-				const row = i - 1;
-				str = `${str}${index}`;
-				++index;
+		for (let i = 1; i < rows * 2; i += 2) {
+			row = (i - 1) * 0.5;
+			col = rows - i * 0.5;
+
+			for (let k = 0; k < ((rows - 1) - i / 2); k++) {
+				str = `${str} `;
 			}
-			str = `${str}\n`;
+			for (let j = 0; j < i; j++) {
+				str = `${str}▲`;
+
+				data = {};
+				data.row = ~~row;
+				data.col = ~~col;
+				data.x = col / cols - 0.5;
+				data.y = row / (rows - 1) - 1 / (rows + 1);
+				data.index = this.data.length;
+				this.data.push(data);
+
+				col++;
+			}
+			str = `${str}\n    `;
 		}
+		str = `${str}\n`;
 
 		console.log(str);
+		console.log(this.data);
 	}
 
 	initThetahedra() {
