@@ -7,11 +7,11 @@ export default class Triangle {
 	constructor() {
 		this.object3D = new THREE.Object3D;
 
-		this.initTriangle();
-		// this.initThetahedra();
+		this.initData();
+		this.initThetahedra();
 	}
 
-	initTriangle() {
+	initData() {
 		this.data = [];
 
 		const rows = 2;
@@ -36,7 +36,12 @@ export default class Triangle {
 				data.row = ~~row;
 				data.col = ~~col;
 				data.x = col / cols - 0.5;
-				data.y = row / (rows - 1) - 1 / (rows + 1);
+				data.y = row / rows;
+
+				data.up = true;
+				if (row % 2 && !(data.col % 2)) data.up = false;
+				else if (!(row % 2) && data.col % 2) data.up = false;
+
 				data.index = this.data.length;
 				this.data.push(data);
 
@@ -48,13 +53,27 @@ export default class Triangle {
 
 		console.log(str);
 		console.log(this.data);
+
+		this.rows = rows;
+		this.cols = cols;
+
+		this.width = Tetrahedron.WIDTH * (this.cols - 0);
+		this.height = Tetrahedron.HEIGHT * (this.rows + 1);
 	}
 
 	initThetahedra() {
 		this.tetrahedra = [];
 
-		for (let i = 0; i < 10; i++) {
-			const tetrahedron = new Tetrahedron();
+		for (let i = 0; i < this.data.length; i++) {
+			const data = this.data[i];
+
+			const tetrahedron = new Tetrahedron(data);
+			tetrahedron.object3D.position.x = data.x * this.width;
+			tetrahedron.object3D.position.y = data.y * this.height;
+
+			// if (!data.up) tetrahedron.object3D.rotation.x = PI;
+			// tetrahedron.object3D.rotation.y = QUARTER_PI;
+
 			this.object3D.add(tetrahedron.object3D);
 			this.tetrahedra.push(tetrahedron);
 		}
