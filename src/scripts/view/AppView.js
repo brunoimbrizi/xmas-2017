@@ -50,6 +50,13 @@ export default class AppView {
 
 		this.sketch.touchend = () => {
 		};
+
+		this.sketch.keyup = (e) => {
+			// console.log(e.keyCode);
+			if (e.keyCode == 82) { // r
+				this.webgl.controls.reset();
+			}
+		};
 	}
 
 	initWebGL() {
