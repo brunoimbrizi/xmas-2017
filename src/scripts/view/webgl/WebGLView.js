@@ -21,8 +21,16 @@ export default class WebGLView {
 		this.scene = new THREE.Scene();
 
 		// camera
-		this.camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 10000);
-		this.camera.position.z = 300;
+		this.perspCamera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 10000);
+		this.perspCamera.position.z = 300;
+
+		// orthographic camera
+		this.hw = window.innerWidth * 0.5;
+		this.hh = window.innerHeight * 0.5;
+		this.orthoCamera = new THREE.OrthographicCamera(-this.hw, this.hw, this.hh, -this.hh, -10000, 10000);
+		this.orthoCamera.position.z = 10;
+
+		this.camera = this.perspCamera;
 	}
 
 	initControls() {
@@ -77,8 +85,18 @@ export default class WebGLView {
 
 	resize() {
 		if (!this.renderer) return;
-		this.camera.aspect = this.view.sketch.width / this.view.sketch.height;
-		this.camera.updateProjectionMatrix();
+		this.perspCamera.aspect = this.view.sketch.width / this.view.sketch.height;
+		this.perspCamera.updateProjectionMatrix();
+
+		// orthographic camera
+		this.hw = window.innerWidth * 0.5;
+		this.hh = window.innerHeight * 0.5;
+
+		this.orthoCamera.left = -this.hw;
+		this.orthoCamera.right = this.hw;
+		this.orthoCamera.top = this.hh;
+		this.orthoCamera.bottom = -this.hh;
+		this.orthoCamera.updateProjectionMatrix();
 
 		this.renderer.setSize(this.view.sketch.width, this.view.sketch.height);
 	}

@@ -6,6 +6,8 @@ export default class UIView {
 	constructor(view) {
 		this.view = view;
 
+		this.camOrtho = false;
+
 		this.range = [0, 1];
 
 		this.initControlKit();
@@ -19,13 +21,18 @@ export default class UIView {
 		this.controlKit.addPanel({ width: 300, enable: false })
 
 		.addGroup({label: 'Camera', enable: true })
-		// .addSlider(this, 'camX', 'rangeCam', { label: 'x', onChange: () => { that.onCameraChange(); } })
-		// .addCheckbox(this, 'camStoryboard', { label: 'storyboard', onChange: () => { that.onCameraChange(); } })
+		// .addSlider(this, 'camOrtho', 'rangeCam', { label: 'x', onChange: () => { that.onCameraChange(); } })
+		.addCheckbox(this, 'camOrtho', { label: 'orthographic', onChange: () => { this.onCameraChange(); } })
 	}
 
 	initStats() {
 		this.stats = new Stats();
 
 		document.body.appendChild(this.stats.dom);
+	}
+
+	onCameraChange() {
+		const webgl = this.view.webgl;
+		webgl.camera = (this.camOrtho) ? webgl.orthoCamera : webgl.perspCamera;
 	}
 }
