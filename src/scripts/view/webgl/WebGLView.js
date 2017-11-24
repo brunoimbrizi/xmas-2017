@@ -12,16 +12,18 @@ export default class WebGLView {
 
 		this.initThree();
 		this.initControls();
-		this.initObject();
+		// this.initObject();
 		this.initTriangle();
 	}
 
 	initThree() {
+		this.renderer.sortObjects = false;
+
 		// scene
 		this.scene = new THREE.Scene();
 
 		// camera
-		this.perspCamera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 10000);
+		this.perspCamera = new THREE.PerspectiveCamera(30, window.innerWidth / window.innerHeight, 10, 10000);
 		this.perspCamera.position.z = 300;
 
 		// orthographic camera
