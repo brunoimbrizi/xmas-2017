@@ -1,6 +1,8 @@
 const glslify = require('glslify');
 import * as THREE from 'three';
 import TrackballControls from 'three-trackballcontrols';
+// import { Clock, PerspectiveCamera, Scene, WebGLRenderer } from "three";
+import { EffectComposer, FilmPass, GlitchPass, RenderPass } from 'postprocessing';
 
 import Triangle from './shapes/Triangle';
 
@@ -14,6 +16,8 @@ export default class WebGLView {
 		this.initControls();
 		// this.initObject();
 		this.initTriangle();
+		this.initLights();
+		this.initPostProcessing();
 	}
 
 	initThree() {
@@ -69,6 +73,25 @@ export default class WebGLView {
 		this.scene.add(this.triangle.object3D);
 	}
 
+	initLights() {
+		const lightA = new THREE.DirectionalLight(0xFFFFFF, 1);
+		lightA.position.set(1, 0.5, 0);
+		this.scene.add(lightA);
+	}
+
+	initPostProcessing() {
+		this.composer = new EffectComposer(this.renderer);
+		this.composer.addPass(new RenderPass(this.scene, this.camera));
+
+		const pass = new FilmPass({
+			grayscale: true,
+		});
+		pass.renderToScreen = true;
+		this.composer.addPass(pass);
+
+		this.clock = new THREE.Clock();
+	}
+
 	// ---------------------------------------------------------------------------------------------
 	// PUBLIC
 	// ---------------------------------------------------------------------------------------------
@@ -78,7 +101,8 @@ export default class WebGLView {
 	}
 
 	draw() {
-		this.renderer.render(this.scene, this.camera);
+		if (this.view.ui.postUse) this.composer.render(this.clock.getDelta());
+		else this.renderer.render(this.scene, this.camera);
 	}
 
 	// ---------------------------------------------------------------------------------------------
@@ -101,5 +125,6 @@ export default class WebGLView {
 		this.orthoCamera.updateProjectionMatrix();
 
 		this.renderer.setSize(this.view.sketch.width, this.view.sketch.height);
+		this.composer.setSize(this.view.sketch.width, this.view.sketch.height);
 	}
 }
