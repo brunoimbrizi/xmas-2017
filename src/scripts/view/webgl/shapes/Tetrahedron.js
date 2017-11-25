@@ -22,7 +22,7 @@ export default class Tetrahedron {
 		// const geometry = new THREE.BoxBufferGeometry(this.width, this.height, this.width);
 
 		const material = new THREE.MeshLambertMaterial({
-			color: 0x00FFFF,
+			color: 0xFFFFFF,
 			// wireframe: true,
 			// transparent: true,
 			// opacity: 0.5,

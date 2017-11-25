@@ -52,6 +52,8 @@ export default class AppView {
 		};
 
 		this.sketch.keyup = (e) => {
+			if (!this.webgl) return; 
+			
 			// console.log(e.keyCode);
 			if (e.keyCode == 82) { // r
 				this.webgl.controls.reset();

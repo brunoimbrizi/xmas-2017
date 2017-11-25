@@ -5,6 +5,8 @@ import TrackballControls from 'three-trackballcontrols';
 import { EffectComposer, FilmPass, GlitchPass, RenderPass } from 'postprocessing';
 
 import Triangle from './shapes/Triangle';
+import SkyBox from './sky/SkyBox';
+import FilmicPass from './passes/FilmicPass';
 
 export default class WebGLView {
 
@@ -16,6 +18,7 @@ export default class WebGLView {
 		this.initControls();
 		// this.initObject();
 		this.initTriangle();
+		this.initSky();
 		this.initLights();
 		this.initPostProcessing();
 	}
@@ -73,6 +76,11 @@ export default class WebGLView {
 		this.scene.add(this.triangle.object3D);
 	}
 
+	initSky() {
+		this.sky = new SkyBox();
+		this.scene.add(this.sky.object3D);
+	}
+
 	initLights() {
 		const lightA = new THREE.DirectionalLight(0xFFFFFF, 1);
 		lightA.position.set(1, 0.5, 0);
@@ -83,9 +91,14 @@ export default class WebGLView {
 		this.composer = new EffectComposer(this.renderer);
 		this.composer.addPass(new RenderPass(this.scene, this.camera));
 
+		
 		const pass = new FilmPass({
 			grayscale: true,
+			vignette: true,
+			eskil: true,
 		});
+		
+		// const pass = new FilmicPass();
 		pass.renderToScreen = true;
 		this.composer.addPass(pass);
 

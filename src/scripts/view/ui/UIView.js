@@ -8,7 +8,7 @@ export default class UIView {
 
 		this.camOrtho = false;
 
-		this.postUse = false;
+		this.postUse = true;
 
 		this.range = [0, 1];
 
