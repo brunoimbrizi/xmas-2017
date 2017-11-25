@@ -14,8 +14,9 @@ export default class Triangle {
 	initData() {
 		this.data = [];
 
-		const rows = 2;
+		const rows = 3;
 		const cols = rows * 2 - 1;
+		const mRow = (rows / 2) - 0.5;
 
 		let col, row = 0;
 		let index = 0;
@@ -36,7 +37,7 @@ export default class Triangle {
 				data.row = ~~row;
 				data.col = ~~col;
 				data.x = col / cols - 0.5;
-				data.y = row / rows;
+				data.y = (mRow - row) / rows;
 
 				data.up = true;
 				if (row % 2 && !(data.col % 2)) data.up = false;
@@ -57,8 +58,8 @@ export default class Triangle {
 		this.rows = rows;
 		this.cols = cols;
 
-		this.width = Tetrahedron.WIDTH * (this.cols - 0);
-		this.height = Tetrahedron.HEIGHT * (this.rows + 1);
+		this.width = Tetrahedron.WIDTH * this.cols;
+		this.height = Tetrahedron.HEIGHT * this.rows;
 	}
 
 	initThetahedra() {
@@ -71,7 +72,7 @@ export default class Triangle {
 			tetrahedron.object3D.position.x = data.x * this.width;
 			tetrahedron.object3D.position.y = data.y * this.height;
 
-			// if (!data.up) tetrahedron.object3D.rotation.x = PI;
+			if (!data.up) tetrahedron.object3D.rotation.x = PI;
 			// tetrahedron.object3D.rotation.y = QUARTER_PI;
 
 			this.object3D.add(tetrahedron.object3D);

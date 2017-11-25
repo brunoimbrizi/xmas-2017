@@ -3,7 +3,7 @@ import * as THREE from 'three';
 export default class Tetrahedron {
 
 	static get WIDTH() { return 10; }
-	static get HEIGHT() { return 12; }
+	static get HEIGHT() { return 10; }
 
 	constructor(data) {
 		this.data = data;
@@ -17,9 +17,9 @@ export default class Tetrahedron {
 	}
 
 	initMesh() {
-		// const geometry = new THREE.ConeBufferGeometry(this.width, this.height, 4);
+		const geometry = new THREE.ConeBufferGeometry(this.width, this.height, 4);
 		// const geometry = new THREE.TetrahedronBufferGeometry(this.radius);
-		const geometry = new THREE.BoxBufferGeometry(this.radius, this.radius, this.radius);
+		// const geometry = new THREE.BoxBufferGeometry(this.width, this.height, this.width);
 
 		const material = new THREE.MeshBasicMaterial({
 			color: 0x00FF00,
