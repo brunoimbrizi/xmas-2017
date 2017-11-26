@@ -73,7 +73,7 @@ export default class Triangle {
 			tetrahedron.object3D.position.y = data.y * this.height;
 
 			if (!data.up) tetrahedron.object3D.rotation.x = PI;
-			// tetrahedron.object3D.rotation.y = QUARTER_PI;
+			tetrahedron.object3D.rotation.y = QUARTER_PI;
 
 			this.object3D.add(tetrahedron.object3D);
 			this.tetrahedra.push(tetrahedron);

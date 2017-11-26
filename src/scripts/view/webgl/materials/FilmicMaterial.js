@@ -1,40 +1,41 @@
 const glslify = require('glslify');
-import { ShaderMaterial, Uniform, Vector2 } from 'three';
 
-// import fragment from '../../../../shaders/filmic.frag';
-// import vertex from '../../../../shaders/default.vert';
+import { ShaderMaterial, Uniform, Vector2 } from 'three';
 
 export default class FilmicMaterial extends ShaderMaterial {
 
 	constructor(options = {}) {
 		const settings = Object.assign({
-
-			screenMode: true,
+			blur: true,
+			dispersion: true,
+			distortion: true,
 			noise: true,
 			scanlines: true,
-
-			greyscale: false,
-			sepia: false,
-			vignette: false,
+			screenMode: true,
+			vignette: true,
 			eskil: false,
 
-			noiseIntensity: 0.5,
-			scanlineIntensity: 0.05,
-			greyscaleIntensity: 1.0,
-			sepiaIntensity: 1.0,
+			distortionK: 0.5,
+			distortionKcube: 0.1,
+			distortionScale: 0.9,
 
-			vignetteOffset: 1.0,
-			vignetteDarkness: 1.0
+			dispersionOffset: 0.1,
+
+			blurIntensity: 5,
+
+			noiseIntensity: 0.5,
+
+			scanlineIntensity: 0.1,
+
+			vignetteOffset: 0.0,
+			vignetteDarkness: 0.5,
 
 		}, options);
 
 		super({
-
 			type: 'FilmicMaterial',
 
 			uniforms: {
-
-				/*
 				tDiffuse: new Uniform(null),
 				time: new Uniform(0.0),
 
@@ -42,55 +43,57 @@ export default class FilmicMaterial extends ShaderMaterial {
 				scanlineIntensity: new Uniform(settings.scanlineIntensity),
 				scanlineCount: new Uniform(0.0),
 
-				greyscaleIntensity: new Uniform(settings.greyscaleIntensity),
-				sepiaIntensity: new Uniform(settings.sepiaIntensity),
-
 				vignetteOffset: new Uniform(settings.vignetteOffset),
-				vignetteDarkness: new Uniform(settings.vignetteDarkness)
-				*/
+				vignetteDarkness: new Uniform(settings.vignetteDarkness),
 
-				//lens distortion
-				resolution: {type: 'v2', value: new Vector2(window.innerWidth, window.innerHeight)},
-				k: {type: 'f', value: 0.05},
-				kcube: { type: 'f', value: 0.1},
-				scale: { type: 'f', value: 0.9},
-				dispersion: {type:'f', value:0.01},
-				blurAmount: {type: 'f', value: 4.0},
-				blurEnabled: {type:'i', value: 1},
+				blurIntensity: new Uniform(settings.blurIntensity),
 
-				//film grain..
-				grainamount: {type: 'f', value: 0.03},
-				colored: {type: 'i', value: 0},
-				coloramount: {type: 'f', value:0.6},
-				grainsize: {type:'f', value:1.9},
-				lumamount: {type: 'f', value:1.0},
-				timer: {type: 'f', value: 0.0},
+				dispersionOffset: new Uniform(settings.dispersionOffset),
 
-				//film dust, scratches, burn
-				scratches: {type: 'f', value: 0.0},
-				burn: {type: 'f', value: 0.3},
-
-				//filter
-				filterStrength: {type: 'f', value: 1},
-
-				//the scene texture...
-				// texture: {type:'t', value: renderTarget2},
-				texture: new Uniform(null),
-
-				//the filter lookup texture
-				// lookupTexture: {type: 't', value: lookupTexture },
-
+				distortionK: new Uniform(settings.distortionK),
+				distortionKcube: new Uniform(settings.distortionKcube),
+				distortionScale: new Uniform(settings.distortionScale),
 			},
 
-			fragmentShader: glslify('../../../../shaders/lens.frag'),
+			fragmentShader: glslify('../../../../shaders/filmic.frag'),
 			vertexShader: glslify('../../../../shaders/default.vert'),
-
-			// fragmentShader: fragment,
-			// vertexShader: vertex,
 
 			depthWrite: false,
 			depthTest: false,
 
 		});
+
+		this.scanlineDensity = (settings.scanlineDensity === undefined) ? 1.0 : settings.scanlineDensity;
+
+		this.setDefine('BLUR', settings.blur);
+		this.setDefine('DISPERSION', settings.dispersion);
+		this.setDefine('DISTORTION', settings.distortion);
+		this.setDefine('NOISE', settings.noise);
+		this.setDefine('SCANLINES', settings.scanlines);
+		this.setDefine('VIGNETTE', settings.vignette);
+		this.setDefine('ESKIL', settings.eskil);
 	}
+
+	setDefine(label, enabled) {
+		if (enabled) this.defines[label] = '1';
+		else delete this.defines[label];
+		this.needsUpdate = true;
+	}
+
+	// ---------------------------------------------------------------------------------------------
+	// PUBLIC
+	// ---------------------------------------------------------------------------------------------
+
+	update(delta) {
+		this.uniforms.time.value += delta;
+	}
+
+	// ---------------------------------------------------------------------------------------------
+	// EVENT HANDLERS
+	// ---------------------------------------------------------------------------------------------
+
+	resize() {
+		this.uniforms.scanlineCount.value = Math.round(window.innerHeight * this.scanlineDensity);
+	}
+
 }

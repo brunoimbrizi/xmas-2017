@@ -2,11 +2,12 @@ const glslify = require('glslify');
 import * as THREE from 'three';
 import TrackballControls from 'three-trackballcontrols';
 // import { Clock, PerspectiveCamera, Scene, WebGLRenderer } from "three";
-import { EffectComposer, FilmPass, GlitchPass, RenderPass } from 'postprocessing';
+import { EffectComposer, FilmPass, ShaderPass, RenderPass } from 'postprocessing';
 
 import Triangle from './shapes/Triangle';
 import SkyBox from './sky/SkyBox';
 import FilmicPass from './passes/FilmicPass';
+import FilmicMaterial from './materials/FilmicMaterial';
 
 export default class WebGLView {
 
@@ -91,14 +92,22 @@ export default class WebGLView {
 		this.composer = new EffectComposer(this.renderer);
 		this.composer.addPass(new RenderPass(this.scene, this.camera));
 
-		
-		const pass = new FilmPass({
-			grayscale: true,
+		/*
+		const pass = new FilmicPass({
+			// grayscale: false,
 			vignette: true,
-			eskil: true,
+			// eskil: false,
+			vignetteOffset: 0.0,
+			vignetteDarkness: 0.5,
+			noiseIntensity: 0.1,
+			scanlineIntensity: 0.1,
 		});
-		
-		// const pass = new FilmicPass();
+		*/
+		this.filmicMaterial = new FilmicMaterial({
+			vignetteOffset: 0.0,
+		});
+
+		const pass = new ShaderPass(this.filmicMaterial);
 		pass.renderToScreen = true;
 		this.composer.addPass(pass);
 
@@ -111,6 +120,7 @@ export default class WebGLView {
 
 	update() {
 		this.controls.update();
+		this.filmicMaterial.update(this.clock.getDelta());
 	}
 
 	draw() {
@@ -136,6 +146,8 @@ export default class WebGLView {
 		this.orthoCamera.top = this.hh;
 		this.orthoCamera.bottom = -this.hh;
 		this.orthoCamera.updateProjectionMatrix();
+
+		this.filmicMaterial.resize();
 
 		this.renderer.setSize(this.view.sketch.width, this.view.sketch.height);
 		this.composer.setSize(this.view.sketch.width, this.view.sketch.height);
