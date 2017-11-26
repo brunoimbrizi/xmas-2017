@@ -121,10 +121,14 @@ export default class WebGLView {
 	update() {
 		this.controls.update();
 		this.filmicMaterial.update(this.clock.getDelta());
+
+		this.triangle.object3D.rotation.x = this.clock.getElapsedTime();
+		this.triangle.object3D.rotation.z = this.clock.getElapsedTime() * 0.4;
+		this.triangle.object3D.rotation.y = this.clock.getElapsedTime() * 0.8;
 	}
 
 	draw() {
-		if (this.view.ui.postUse) this.composer.render(this.clock.getDelta());
+		if (this.view.ui.postEnabled) this.composer.render(this.clock.getDelta());
 		else this.renderer.render(this.scene, this.camera);
 	}
 

@@ -84,6 +84,8 @@ void main() {
 	vec3 color = texel.rgb;
 
 	vec3 eta = vec3(1.0, 1.0, 1.0);
+	float f = 1.0;
+	float scale = 1.0;
 
 	#ifdef DISPERSION
 		//index of refraction of each color channel, causing chromatic dispersion
@@ -93,17 +95,19 @@ void main() {
 
 	#ifdef DISTORTION
 		float r2 = (vUv.x - 0.5) * (vUv.x - 0.5) + (vUv.y - 0.5) * (vUv.y - 0.5);       
-		float f = 0.0;
 
-		//only compute the cubic distortion if necessary
 		// f = 1.0 + r2 * distortionK;
 		f = 1.0 + r2 * (distortionK + distortionKcube * sqrt(r2));
 
-		// get the right pixel for the current position
-		vec2 rCoords = (f * eta.r) * distortionScale * (vUv.xy - 0.5) + 0.5;
-		vec2 gCoords = (f * eta.g) * distortionScale * (vUv.xy - 0.5) + 0.5;
-		vec2 bCoords = (f * eta.b) * distortionScale * (vUv.xy - 0.5) + 0.5;
+		scale = distortionScale;
+	#endif
 
+	// get the right pixel for the current position
+	vec2 rCoords = (f * eta.r) * scale * (vUv.xy - 0.5) + 0.5;
+	vec2 gCoords = (f * eta.g) * scale * (vUv.xy - 0.5) + 0.5;
+	vec2 bCoords = (f * eta.b) * scale * (vUv.xy - 0.5) + 0.5;
+
+	#ifdef DISTORTION
 		color.r = texture2D(tDiffuse, rCoords).r;
 		color.g = texture2D(tDiffuse, gCoords).g;
 		color.b = texture2D(tDiffuse, bCoords).b;
@@ -115,7 +119,7 @@ void main() {
 		color.b = blur(bCoords).b;
 	#endif
 
-	texel.rgb = color.rgb;
+	// texel.rgb = color.rgb;
 
 	#ifdef SCREEN_MODE
 		vec3 invColor;
