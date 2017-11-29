@@ -58,7 +58,7 @@ export default class Triangle {
 		this.rows = rows;
 		this.cols = cols;
 
-		this.width = Tetrahedron.WIDTH * this.cols;
+		this.width = Tetrahedron.WIDTH * this.cols * 0.5;
 		this.height = Tetrahedron.HEIGHT * this.rows;
 	}
 
@@ -72,8 +72,7 @@ export default class Triangle {
 			tetrahedron.object3D.position.x = data.x * this.width;
 			tetrahedron.object3D.position.y = data.y * this.height;
 
-			if (!data.up) tetrahedron.object3D.rotation.x = PI;
-			tetrahedron.object3D.rotation.y = QUARTER_PI;
+			if (!data.up) tetrahedron.object3D.rotation.z = PI;
 
 			this.object3D.add(tetrahedron.object3D);
 			this.tetrahedra.push(tetrahedron);

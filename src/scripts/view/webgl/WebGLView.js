@@ -84,7 +84,7 @@ export default class WebGLView {
 
 	initLights() {
 		const lightA = new THREE.DirectionalLight(0xFFFFFF, 1);
-		lightA.position.set(1, 0.5, 0);
+		lightA.position.set(1, -0.5, 0);
 		this.scene.add(lightA);
 	}
 
@@ -121,10 +121,6 @@ export default class WebGLView {
 	update() {
 		this.controls.update();
 		this.filmicMaterial.update(this.clock.getDelta());
-
-		this.triangle.object3D.rotation.x = this.clock.getElapsedTime();
-		this.triangle.object3D.rotation.z = this.clock.getElapsedTime() * 0.4;
-		this.triangle.object3D.rotation.y = this.clock.getElapsedTime() * 0.8;
 	}
 
 	draw() {

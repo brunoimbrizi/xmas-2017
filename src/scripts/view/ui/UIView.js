@@ -9,7 +9,7 @@ export default class UIView {
 		this.camOrtho = false;
 
 		const material = this.view.webgl.filmicMaterial;
-		this.postEnabled = true;
+		this.postEnabled = false;
 		this.postBlur = material.defines.BLUR || false;
 		this.postDispersion = material.defines.DISPERSION || false;
 		this.postDistortion = material.defines.DISTORTION || false;
@@ -74,6 +74,11 @@ export default class UIView {
 		const webgl = this.view.webgl;
 		webgl.camera = (this.camOrtho) ? webgl.orthoCamera : webgl.perspCamera;
 		webgl.composer.passes[0].camera = webgl.camera;
+
+		if (this.camOrtho) {
+			webgl.camera.zoom = 12;
+			webgl.camera.updateProjectionMatrix();
+		}
 	}
 
 	onPostProcessingChange() {
