@@ -14,7 +14,7 @@ export default class Triangle {
 	initData() {
 		this.data = [];
 
-		const rows = 3;
+		const rows = 7;
 		const cols = rows * 2 - 1;
 		const mRow = (rows / 2) - 0.5;
 
@@ -76,6 +76,13 @@ export default class Triangle {
 
 			this.object3D.add(tetrahedron.object3D);
 			this.tetrahedra.push(tetrahedron);
+		}
+	}
+
+	update() {
+		for (let i = 0; i < this.data.length; i++) {
+			const tetrahedron = this.tetrahedra[i];
+			tetrahedron.update();
 		}
 	}
 }

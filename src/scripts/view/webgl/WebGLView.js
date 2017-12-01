@@ -121,6 +121,8 @@ export default class WebGLView {
 	update() {
 		this.controls.update();
 		this.filmicMaterial.update(this.clock.getDelta());
+
+		this.triangle.update();
 	}
 
 	draw() {

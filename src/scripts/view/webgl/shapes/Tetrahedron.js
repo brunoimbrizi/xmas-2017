@@ -17,6 +17,8 @@ export default class Tetrahedron {
 		this.re = sqrt(6) * (Tetrahedron.WIDTH / 6);	// radius of exspheres
 		this.de = sqrt(6) * (Tetrahedron.WIDTH / 2);	// distance to exsphere centre from a vertex
 
+		this.ric = Tetrahedron.WIDTH * (sqrt(3) / 6);	// radius of the inscribed circle (equilateral triangle)
+
 		this.object3D = new THREE.Object3D();
 
 		this.initMesh();
@@ -41,13 +43,13 @@ export default class Tetrahedron {
 		// face 0
 		mesh.rotation.z = -QUARTER_PI;
 		mesh.rotation.x = atan(sqrt(2));
-		// mesh.position.y = this.height - this.width;
-		// mesh.position.y = -1.44;
+
+		mesh.position.y = -(this.height * 0.5 - this.ric);
 		// mesh.position.z = (this.width - this.radius) * 0.5;
 	}
 
 	initBoundingBox() {
-		const geometry = new THREE.BoxBufferGeometry(this.width, this.height, this.height);
+		const geometry = new THREE.BoxBufferGeometry(this.height, this.height, this.width);
 
 		const material = new THREE.MeshBasicMaterial({
 			color: 0x00FF00,
@@ -55,6 +57,10 @@ export default class Tetrahedron {
 		});
 
 		const mesh = new THREE.Mesh(geometry, material);
-		this.object3D.add(mesh);
+		// this.object3D.add(mesh);
+	}
+
+	update() {
+		// this.object3D.children[0].rotation.x += 0.01;
 	}
 }

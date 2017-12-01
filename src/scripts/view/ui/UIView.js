@@ -76,7 +76,7 @@ export default class UIView {
 		webgl.composer.passes[0].camera = webgl.camera;
 
 		if (this.camOrtho) {
-			webgl.camera.zoom = 12;
+			webgl.camera.zoom = 20;
 			webgl.camera.updateProjectionMatrix();
 		}
 	}
