@@ -94,17 +94,34 @@ export default class Tetrahedron {
 		let x, y, z;
 
 		switch (index) {
+			case 0: {
+				x = atan(sqrt(2));
+				y = 0;
+				z = -QUARTER_PI;
+				break;
+			}
 			case 1: {
 				x = atan(sqrt(2)) - HALF_PI;
 				y = QUARTER_PI;
 				z = -HALF_PI;
 				break;
 			}
-			case 0:
+			case 2: {
+				x = -QUARTER_PI;
+				y = PI - QUARTER_PI;
+				z = -PI;
+				break;
+			}
+			case 4: { 	// same as face 0, but with bigger angles
+				x = -QUARTER_PI;
+				y = TWO_PI - QUARTER_PI;
+				z = -PI;
+				break;
+			}
 			default: {
-				x = atan(sqrt(2));
+				x = 0;
 				y = 0;
-				z = -QUARTER_PI;
+				z = 0;
 				break;
 			}
 		}
