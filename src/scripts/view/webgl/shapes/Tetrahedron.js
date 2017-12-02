@@ -28,6 +28,8 @@ export default class Tetrahedron {
 
 		this.initMesh();
 		this.initBoundingBox();
+
+		this.gotoFace(0, true);
 	}
 
 	initMesh() {
@@ -90,7 +92,7 @@ export default class Tetrahedron {
 		this.object3D.add(mesh);
 	}
 
-	gotoFace(index) {
+	gotoFace(index, immediate = false) {
 		let x, y, z;
 
 		switch (index) {
@@ -118,13 +120,22 @@ export default class Tetrahedron {
 				z = QUARTER_PI;
 				break;
 			}
-			case 4: { 	// same as face 0, but with bigger angles
+			case 4: { 	// same as face 0
 				x = -QUARTER_PI;
 				y = TWO_PI - QUARTER_PI;
 				z = -PI;
+				// x = atan(sqrt(2)) - HALF_PI;
+				// y = -QUARTER_PI;
+				// z = PI;
 				break;
 			}
-			case 7: {	// same as face 3, but bigger angles
+			case 5: { 	// same as face 1
+				break;
+			}
+			case 6: { 	// same as face 2
+				break;
+			}
+			case 7: {	// same as face 3
 				x = -QUARTER_PI;
 				y = QUARTER_PI - PI;
 				z = HALF_PI;
@@ -137,6 +148,13 @@ export default class Tetrahedron {
 				z = 0;
 				break;
 			}
+		}
+
+		if (immediate) {
+			this.mesh.rotation.x = x;
+			this.mesh.rotation.y = y;
+			this.mesh.rotation.z = z;
+			return;
 		}
 
 		TweenMax.to(this.mesh.rotation, 1, { x, y, z });
