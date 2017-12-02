@@ -7,7 +7,7 @@ import UIView from './ui/UIView';
 export default class AppView {
 
 	constructor() {
-		this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+		this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
 
 		this.initSketch();
 	}
@@ -43,21 +43,21 @@ export default class AppView {
 
 		this.sketch.touchstart = () => {
 			if (!this.webgl) return;
-			
+
 			const touch = this.sketch.touches[0];
 			this.webgl.touchstart(touch);
 		};
 
 		this.sketch.touchmove = () => {
 			if (!this.webgl) return;
-			
+
 			const touch = this.sketch.touches[0];
 			this.webgl.touchmove(touch);
 		};
 
 		this.sketch.touchend = () => {
 			if (!this.webgl) return;
-			
+
 			this.webgl.touchend();
 		};
 

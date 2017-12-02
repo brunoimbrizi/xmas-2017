@@ -38,7 +38,6 @@ export default class Tetrahedron extends InteractiveObject {
 	}
 
 	initMesh() {
-
 		// const geometry = new THREE.ConeBufferGeometry(this.width, this.height, 3);
 		const geometry = new THREE.TetrahedronGeometry(this.rc);
 		// const geometry = new THREE.BoxBufferGeometry(this.width, this.height, this.width);
@@ -67,11 +66,14 @@ export default class Tetrahedron extends InteractiveObject {
 		}
 
 		const mesh = new THREE.Mesh(geometry, material);
-		this.mesh = mesh;
-		this.object3D.add(mesh);
+		mesh.castShadow = true;
+		mesh.receiveShadow = true;
 
 		mesh.position.y = -this.offset.y;
 		mesh.position.z = this.offset.z;
+
+		this.mesh = mesh;
+		this.object3D.add(mesh);
 	}
 
 	initBoundingBox() {
@@ -195,9 +197,11 @@ export default class Tetrahedron extends InteractiveObject {
 	over() {
 		// console.log('Tetrahedron.over', this.data.index);
 		this.gotoFace(this.currFace + 1);
+		TweenMax.to(this.object3D.position, 0.5, { z: 5, ease: Quart.easeOut });
 	}
 
 	out() {
 		// this.gotoFace(this.currFace - 1);
+		TweenMax.to(this.object3D.position, 0.5, { z: 0, ease: Quart.easeOut });
 	}
 }

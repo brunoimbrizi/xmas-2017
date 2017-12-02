@@ -1,7 +1,5 @@
-const glslify = require('glslify');
 import * as THREE from 'three';
 import TrackballControls from 'three-trackballcontrols';
-// import { Clock, PerspectiveCamera, Scene, WebGLRenderer } from "three";
 import { EffectComposer, FilmPass, ShaderPass, RenderPass } from 'postprocessing';
 
 import InteractiveWebGL from './interactive/InteractiveWebGL';
@@ -9,6 +7,11 @@ import Triangle from './shapes/Triangle';
 import SkyBox from './sky/SkyBox';
 import FilmicPass from './passes/FilmicPass';
 import FilmicMaterial from './materials/FilmicMaterial';
+
+require('./../../../vendors/UnpackDepthRGBAShader.js');
+require('./../../../vendors/ShadowMapViewer.js');
+
+const glslify = require('glslify');
 
 export default class WebGLView {
 
@@ -27,7 +30,11 @@ export default class WebGLView {
 	}
 
 	initThree() {
-		this.renderer.sortObjects = false;
+		// this.renderer.sortObjects = false;
+
+		this.renderer.shadowMap.enabled = true;
+		this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+		// this.renderer.setPixelRatio(window.devicePixelRatio || 1);
 
 		// scene
 		this.scene = new THREE.Scene();
@@ -89,9 +96,28 @@ export default class WebGLView {
 	}
 
 	initLights() {
-		const lightA = new THREE.DirectionalLight(0xFFFFFF, 1);
-		lightA.position.set(1, -0.5, 1);
-		this.scene.add(lightA);
+		const light = new THREE.DirectionalLight(0xFFFFFF, 1);
+		light.position.set(50, -50, 100);
+		this.scene.add(light);
+
+		const shadowMapWidth = 2048;
+		const shadowMapHeight = 2048;
+
+		light.castShadow = true;
+		light.shadow = new THREE.LightShadow( new THREE.PerspectiveCamera(30, shadowMapWidth / shadowMapHeight, 50, 10000));
+		light.shadow.bias = -0.0001;
+		light.shadow.mapSize.width = shadowMapWidth;
+		light.shadow.mapSize.height = shadowMapHeight;
+
+		// DEBUG ONLY
+		this.scene.add( new THREE.CameraHelper( light.shadow.camera ) );
+		
+		this.lightShadowMapViewer = new THREE.ShadowMapViewer(light);
+		this.lightShadowMapViewer.position.x = 10;
+		this.lightShadowMapViewer.position.y = window.innerHeight - (shadowMapHeight / 4) - 10;
+		this.lightShadowMapViewer.size.width = shadowMapWidth / 4;
+		this.lightShadowMapViewer.size.height = shadowMapHeight / 4;
+		this.lightShadowMapViewer.update();
 	}
 
 	initPostProcessing() {
@@ -134,6 +160,9 @@ export default class WebGLView {
 	draw() {
 		if (this.view.ui.postEnabled) this.composer.render(this.clock.getDelta());
 		else this.renderer.render(this.scene, this.camera);
+
+		// DEBUG ONLY
+		this.lightShadowMapViewer.render(this.renderer);
 	}
 
 	// ---------------------------------------------------------------------------------------------
