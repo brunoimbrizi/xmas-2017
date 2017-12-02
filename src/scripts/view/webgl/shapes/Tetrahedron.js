@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import TweenMax from 'gsap';
 
 export default class Tetrahedron {
 
@@ -17,7 +18,11 @@ export default class Tetrahedron {
 		this.re = sqrt(6) * (Tetrahedron.WIDTH / 6);	// radius of exspheres
 		this.de = sqrt(6) * (Tetrahedron.WIDTH / 2);	// distance to exsphere centre from a vertex
 
-		this.ric = Tetrahedron.WIDTH * (sqrt(3) / 6);	// radius of the inscribed circle (equilateral triangle)
+		this.tc = sqrt(3) * (Tetrahedron.WIDTH / 6);	// radius of the inscribed circle (equilateral triangle)
+
+		this.offset = new THREE.Vector3();				// offset center inside cube
+		this.offset.y = this.height * 0.5 - this.tc;
+		this.offset.z = this.height * 0.5 - this.tc;
 
 		this.object3D = new THREE.Object3D();
 
@@ -26,6 +31,7 @@ export default class Tetrahedron {
 	}
 
 	initMesh() {
+
 		// const geometry = new THREE.ConeBufferGeometry(this.width, this.height, 3);
 		const geometry = new THREE.TetrahedronBufferGeometry(this.rc);
 		// const geometry = new THREE.BoxBufferGeometry(this.width, this.height, this.width);
@@ -38,18 +44,26 @@ export default class Tetrahedron {
 		});
 
 		const mesh = new THREE.Mesh(geometry, material);
+		this.mesh = mesh;
 		this.object3D.add(mesh);
 
-		// face 0
-		mesh.rotation.z = -QUARTER_PI;
-		mesh.rotation.x = atan(sqrt(2));
+		mesh.position.y = -this.offset.y;
+		mesh.position.z = this.offset.z;
 
-		mesh.position.y = -(this.height * 0.5 - this.ric);
-		// mesh.position.z = (this.width - this.radius) * 0.5;
+		// face 0
+		// mesh.rotation.x = atan(sqrt(2));
+		// mesh.rotation.y = 0;
+		// mesh.rotation.z = -QUARTER_PI;
+
+		// face 1
+		// mesh.rotation.x = atan(sqrt(2)) - HALF_PI;
+		// mesh.rotation.y = QUARTER_PI;
+		// mesh.rotation.z = -HALF_PI;
+
 	}
 
 	initBoundingBox() {
-		const geometry = new THREE.BoxBufferGeometry(this.height, this.height, this.width);
+		const geometry = new THREE.BoxBufferGeometry(this.height, this.height, this.height);
 
 		const material = new THREE.MeshBasicMaterial({
 			color: 0x00FF00,
@@ -57,7 +71,29 @@ export default class Tetrahedron {
 		});
 
 		const mesh = new THREE.Mesh(geometry, material);
-		// this.object3D.add(mesh);
+		this.object3D.add(mesh);
+	}
+
+	gotoFace(index) {
+		let x, y, z;
+
+		switch (index) {
+			case 1: {
+				x = atan(sqrt(2)) - HALF_PI;
+				y = QUARTER_PI;
+				z = -HALF_PI;
+				break;
+			}
+			case 0:
+			default: {
+				x = atan(sqrt(2));
+				y = 0;
+				z = -QUARTER_PI;
+				break;
+			}
+		}
+
+		TweenMax.to(this.mesh.rotation, 1, { x, y, z });
 	}
 
 	update() {
