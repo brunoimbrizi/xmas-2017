@@ -1,12 +1,16 @@
 import * as THREE from 'three';
 import TweenMax from 'gsap';
 
-export default class Tetrahedron {
+import InteractiveObject from './../interactive/InteractiveObject';
+
+export default class Tetrahedron extends InteractiveObject {
 
 	static get WIDTH() { return 10; }
 	static get HEIGHT() { return (sqrt(3) / 2) * Tetrahedron.WIDTH; }
 
 	constructor(data) {
+		super();
+
 		this.data = data;
 
 		this.width = Tetrahedron.WIDTH;
@@ -27,7 +31,8 @@ export default class Tetrahedron {
 		this.object3D = new THREE.Object3D();
 
 		this.initMesh();
-		this.initBoundingBox();
+		// this.initBoundingBox();
+		this.initHitArea();
 
 		this.gotoFace(0, true);
 	}
@@ -38,7 +43,7 @@ export default class Tetrahedron {
 		const geometry = new THREE.TetrahedronGeometry(this.rc);
 		// const geometry = new THREE.BoxBufferGeometry(this.width, this.height, this.width);
 
-		const material = new THREE.MeshBasicMaterial({
+		const material = new THREE.MeshLambertMaterial({
 			color: 0xFFFFFF,
 			vertexColors: THREE.VertexColors,
 			// wireframe: true,
@@ -54,7 +59,7 @@ export default class Tetrahedron {
 
 		for (let i = 0; i < geometry.faces.length; i++) {
 			const face = geometry.faces[i];
-			const color = colors[i];
+			const color = colors[0];
 
 			for (let j = 0; j < 3; j++) {
 				face.vertexColors[j] = color;
@@ -67,17 +72,6 @@ export default class Tetrahedron {
 
 		mesh.position.y = -this.offset.y;
 		mesh.position.z = this.offset.z;
-
-		// face 0
-		// mesh.rotation.x = atan(sqrt(2));
-		// mesh.rotation.y = 0;
-		// mesh.rotation.z = -QUARTER_PI;
-
-		// face 1
-		// mesh.rotation.x = atan(sqrt(2)) - HALF_PI;
-		// mesh.rotation.y = QUARTER_PI;
-		// mesh.rotation.z = -HALF_PI;
-
 	}
 
 	initBoundingBox() {
@@ -92,14 +86,53 @@ export default class Tetrahedron {
 		this.object3D.add(mesh);
 	}
 
+	initHitArea() {
+		const shape = new THREE.Shape();
+		shape.moveTo(0, this.height * 0.5);
+		shape.lineTo(this.width * 0.5, -this.height * 0.5);
+		shape.lineTo(-this.width * 0.5, -this.height * 0.5);
+		shape.lineTo(0, this.height * 0.5);
+
+		const geometry = new THREE.ShapeBufferGeometry(shape);
+
+		const material = new THREE.MeshBasicMaterial({
+			color: 0x00FFFF,
+			wireframe: true,
+			// transparent: true,
+			// opacity: 0.5,
+		});
+		material.visible = false;
+
+		this.hitArea = new THREE.Mesh(geometry, material);
+		this.object3D.add(this.hitArea);
+
+		// offset
+		this.hitArea.position.z = this.height * 0.5;
+
+		// set interactive target
+		this.hitArea.interactive = this;
+	}
+
+	// ---------------------------------------------------------------------------------------------
+	// PUBLIC
+	// ---------------------------------------------------------------------------------------------
+
+	update() {
+		// this.object3D.children[0].rotation.x += 0.01;
+	}
+
 	gotoFace(index, immediate = false) {
+		this.currFace = index;
+		
 		let x, y, z;
 
 		switch (index) {
+			default:
 			case 0: {
 				x = atan(sqrt(2));
 				y = 0;
 				z = -QUARTER_PI;
+				this.currFace = 0;
 				break;
 			}
 			case 1: {
@@ -109,26 +142,27 @@ export default class Tetrahedron {
 				break;
 			}
 			case 2: {
-				x = -QUARTER_PI;
+				x = atan(sqrt(2)) - HALF_PI;
 				y = PI - QUARTER_PI;
 				z = -PI;
 				break;
 			}
 			case 3: {
-				x = QUARTER_PI - PI;
+				x = atan(sqrt(2)) - PI;
 				y = 0;
 				z = QUARTER_PI;
 				break;
 			}
 			case 4: { 	// same as face 0
-				x = -QUARTER_PI;
-				y = TWO_PI - QUARTER_PI;
-				z = -PI;
 				// x = atan(sqrt(2)) - HALF_PI;
-				// y = -QUARTER_PI;
-				// z = PI;
+				// y = TWO_PI - QUARTER_PI;
+				// z = -PI;
+				x = atan(sqrt(2)) - HALF_PI;
+				y = -QUARTER_PI;
+				z = PI;
 				break;
 			}
+			/*
 			case 5: { 	// same as face 1
 				break;
 			}
@@ -141,13 +175,7 @@ export default class Tetrahedron {
 				z = HALF_PI;
 				break;
 			}
-
-			default: {
-				x = 0;
-				y = 0;
-				z = 0;
-				break;
-			}
+			*/
 		}
 
 		if (immediate) {
@@ -157,10 +185,19 @@ export default class Tetrahedron {
 			return;
 		}
 
-		TweenMax.to(this.mesh.rotation, 1, { x, y, z });
+		TweenMax.to(this.mesh.rotation, 0.5, { x, y, z, ease: Quart.easeOut });
 	}
 
-	update() {
-		// this.object3D.children[0].rotation.x += 0.01;
+	// ---------------------------------------------------------------------------------------------
+	// INTERACTIVE
+	// ---------------------------------------------------------------------------------------------
+
+	over() {
+		// console.log('Tetrahedron.over', this.data.index);
+		this.gotoFace(this.currFace + 1);
+	}
+
+	out() {
+		// this.gotoFace(this.currFace - 1);
 	}
 }

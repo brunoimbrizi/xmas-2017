@@ -4,7 +4,9 @@ import Tetrahedron from './Tetrahedron';
 
 export default class Triangle {
 
-	constructor() {
+	constructor(interactive) {
+		this.interactive = interactive;
+
 		this.object3D = new THREE.Object3D;
 
 		this.initData();
@@ -76,8 +78,14 @@ export default class Triangle {
 
 			this.object3D.add(tetrahedron.object3D);
 			this.tetrahedra.push(tetrahedron);
+
+			this.interactive.interactiveObjects.push(tetrahedron.hitArea);
 		}
 	}
+
+	// ---------------------------------------------------------------------------------------------
+	// PUBLIC
+	// ---------------------------------------------------------------------------------------------
 
 	update() {
 		for (let i = 0; i < this.data.length; i++) {

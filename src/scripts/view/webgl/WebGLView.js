@@ -4,6 +4,7 @@ import TrackballControls from 'three-trackballcontrols';
 // import { Clock, PerspectiveCamera, Scene, WebGLRenderer } from "three";
 import { EffectComposer, FilmPass, ShaderPass, RenderPass } from 'postprocessing';
 
+import InteractiveWebGL from './interactive/InteractiveWebGL';
 import Triangle from './shapes/Triangle';
 import SkyBox from './sky/SkyBox';
 import FilmicPass from './passes/FilmicPass';
@@ -17,6 +18,7 @@ export default class WebGLView {
 
 		this.initThree();
 		this.initControls();
+		this.initInteractive();
 		// this.initObject();
 		this.initTriangle();
 		this.initSky();
@@ -57,6 +59,10 @@ export default class WebGLView {
 		this.controls.enabled = true;
 	}
 
+	initInteractive() {
+		this.interactive = new InteractiveWebGL(this);
+	}
+
 	initObject() {
 		const geometry = new THREE.BoxGeometry(200, 200, 200);
 		// const geometry = new THREE.PlaneGeometry(400, 400, 20, 20);
@@ -73,7 +79,7 @@ export default class WebGLView {
 	}
 
 	initTriangle() {
-		this.triangle = new Triangle();
+		this.triangle = new Triangle(this.interactive);
 		this.scene.add(this.triangle.object3D);
 	}
 
@@ -84,7 +90,7 @@ export default class WebGLView {
 
 	initLights() {
 		const lightA = new THREE.DirectionalLight(0xFFFFFF, 1);
-		lightA.position.set(1, -0.5, 0);
+		lightA.position.set(1, -0.5, 1);
 		this.scene.add(lightA);
 	}
 
@@ -153,5 +159,17 @@ export default class WebGLView {
 
 		this.renderer.setSize(this.view.sketch.width, this.view.sketch.height);
 		this.composer.setSize(this.view.sketch.width, this.view.sketch.height);
+	}
+
+	touchstart(touch) {
+		this.interactive.touchstart(touch);
+	}
+
+	touchmove(touch) {
+		this.interactive.touchmove(touch);
+	}
+
+	touchend() {
+		this.interactive.touchend();
 	}
 }
