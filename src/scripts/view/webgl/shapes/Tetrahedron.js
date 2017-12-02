@@ -33,15 +33,31 @@ export default class Tetrahedron {
 	initMesh() {
 
 		// const geometry = new THREE.ConeBufferGeometry(this.width, this.height, 3);
-		const geometry = new THREE.TetrahedronBufferGeometry(this.rc);
+		const geometry = new THREE.TetrahedronGeometry(this.rc);
 		// const geometry = new THREE.BoxBufferGeometry(this.width, this.height, this.width);
 
-		const material = new THREE.MeshLambertMaterial({
+		const material = new THREE.MeshBasicMaterial({
 			color: 0xFFFFFF,
+			vertexColors: THREE.VertexColors,
 			// wireframe: true,
 			// transparent: true,
 			// opacity: 0.5,
 		});
+
+		const colors = [];
+		colors.push(new THREE.Color(0xFF0000));
+		colors.push(new THREE.Color(0x00FF00));
+		colors.push(new THREE.Color(0x0000FF));
+		colors.push(new THREE.Color(0x00FFFF));
+
+		for (let i = 0; i < geometry.faces.length; i++) {
+			const face = geometry.faces[i];
+			const color = colors[i];
+
+			for (let j = 0; j < 3; j++) {
+				face.vertexColors[j] = color;
+			}
+		}
 
 		const mesh = new THREE.Mesh(geometry, material);
 		this.mesh = mesh;
