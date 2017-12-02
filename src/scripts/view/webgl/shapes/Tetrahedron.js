@@ -112,12 +112,25 @@ export default class Tetrahedron {
 				z = -PI;
 				break;
 			}
+			case 3: {
+				x = QUARTER_PI - PI;
+				y = 0;
+				z = QUARTER_PI;
+				break;
+			}
 			case 4: { 	// same as face 0, but with bigger angles
 				x = -QUARTER_PI;
 				y = TWO_PI - QUARTER_PI;
 				z = -PI;
 				break;
 			}
+			case 7: {	// same as face 3, but bigger angles
+				x = -QUARTER_PI;
+				y = QUARTER_PI - PI;
+				z = HALF_PI;
+				break;
+			}
+
 			default: {
 				x = 0;
 				y = 0;
