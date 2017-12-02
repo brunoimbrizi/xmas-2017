@@ -22,8 +22,6 @@ export default class WebGLView {
 		this.view = view;
 		this.renderer = this.view.renderer;
 
-		this.debug = getParam('debug') !== '';
-
 		this.initThree();
 		this.initControls();
 		this.initInteractive();
@@ -48,7 +46,7 @@ export default class WebGLView {
 
 		// camera
 		this.perspCamera = new THREE.PerspectiveCamera(30, window.innerWidth / window.innerHeight, 10, 10000);
-		this.perspCamera.position.z = 300;
+		this.perspCamera.position.z = 150;
 
 		// orthographic camera
 		this.hw = window.innerWidth * 0.5;
@@ -60,6 +58,8 @@ export default class WebGLView {
 	}
 
 	initControls() {
+		if (!app.debug) return;
+
 		this.controls = new TrackballControls(this.camera, this.renderer.domElement);
 		this.controls.target.set(0, 0, 0);
 		this.controls.rotateSpeed = 2.0;
@@ -104,7 +104,7 @@ export default class WebGLView {
 
 	initLights() {
 		this.light = new THREE.DirectionalLight(0xFFFFFF, 1);
-		this.light.position.set(20, -50, 100);
+		this.light.position.set(20, -50, 150);
 		this.scene.add(this.light);
 
 		const shadowMapWidth = 2048;
@@ -115,6 +115,10 @@ export default class WebGLView {
 		this.light.shadow.bias = -0.0001;
 		this.light.shadow.mapSize.width = shadowMapWidth;
 		this.light.shadow.mapSize.height = shadowMapHeight;
+
+		// const light = new THREE.DirectionalLight(0xFFFFFF, 1);
+		// light.position.set(1, 1, 1);
+		// this.scene.add(light);
 	}
 
 	initDebugShadow() {
@@ -155,7 +159,8 @@ export default class WebGLView {
 	// ---------------------------------------------------------------------------------------------
 
 	update() {
-		this.controls.update();
+		if (this.controls) this.controls.update();
+
 		this.filmicMaterial.update(this.clock.getDelta());
 
 		this.triangle.update();

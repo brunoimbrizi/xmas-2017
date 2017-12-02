@@ -58,7 +58,7 @@ export default class Tetrahedron extends InteractiveObject {
 
 		for (let i = 0; i < geometry.faces.length; i++) {
 			const face = geometry.faces[i];
-			const color = colors[0];
+			const color = colors[i];
 
 			for (let j = 0; j < 3; j++) {
 				face.vertexColors[j] = color;
@@ -187,7 +187,7 @@ export default class Tetrahedron extends InteractiveObject {
 			return;
 		}
 
-		TweenMax.to(this.mesh.rotation, 0.5, { x, y, z, ease: Quart.easeOut });
+		TweenMax.to(this.mesh.rotation, 0.5, { x, y, z, ease: Quad.easeOut });
 	}
 
 	// ---------------------------------------------------------------------------------------------

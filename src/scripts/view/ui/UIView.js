@@ -36,6 +36,8 @@ export default class UIView {
 	}
 
 	initControlKit() {
+		if (!app.debug) return;
+		
 		const that = this;
 
 		this.controlKit = new ControlKit();

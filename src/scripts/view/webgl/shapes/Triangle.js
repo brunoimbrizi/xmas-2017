@@ -16,7 +16,7 @@ export default class Triangle {
 	initData() {
 		this.data = [];
 
-		const rows = 3;
+		const rows = 7;
 		const cols = rows * 2 - 1;
 		const mRow = (rows / 2) - 0.5;
 
