@@ -119,7 +119,7 @@ void main() {
 		color.b = blur(bCoords).b;
 	#endif
 
-	// texel.rgb = color.rgb;
+	texel.rgb = color.rgb;
 
 	#ifdef SCREEN_MODE
 		vec3 invColor;
