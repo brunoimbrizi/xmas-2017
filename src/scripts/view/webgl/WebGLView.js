@@ -8,8 +8,11 @@ import SkyBox from './sky/SkyBox';
 import FilmicPass from './passes/FilmicPass';
 import FilmicMaterial from './materials/FilmicMaterial';
 
-require('./../../../vendors/UnpackDepthRGBAShader.js');
-require('./../../../vendors/ShadowMapViewer.js');
+// TODO remove this to save some bytes
+import DebugShadow from './lights/DebugShadow';
+
+import { getParam } from './../../utils/query.utils';
+
 
 const glslify = require('glslify');
 
@@ -19,6 +22,8 @@ export default class WebGLView {
 		this.view = view;
 		this.renderer = this.view.renderer;
 
+		this.debug = getParam('debug') !== '';
+
 		this.initThree();
 		this.initControls();
 		this.initInteractive();
@@ -27,6 +32,8 @@ export default class WebGLView {
 		this.initSky();
 		this.initLights();
 		this.initPostProcessing();
+
+		this.initDebugShadow();
 	}
 
 	initThree() {
@@ -96,28 +103,25 @@ export default class WebGLView {
 	}
 
 	initLights() {
-		const light = new THREE.DirectionalLight(0xFFFFFF, 1);
-		light.position.set(50, -50, 100);
-		this.scene.add(light);
+		this.light = new THREE.DirectionalLight(0xFFFFFF, 1);
+		this.light.position.set(20, -50, 100);
+		this.scene.add(this.light);
 
 		const shadowMapWidth = 2048;
 		const shadowMapHeight = 2048;
 
-		light.castShadow = true;
-		light.shadow = new THREE.LightShadow( new THREE.PerspectiveCamera(30, shadowMapWidth / shadowMapHeight, 50, 10000));
-		light.shadow.bias = -0.0001;
-		light.shadow.mapSize.width = shadowMapWidth;
-		light.shadow.mapSize.height = shadowMapHeight;
+		this.light.castShadow = true;
+		this.light.shadow = new THREE.LightShadow( new THREE.PerspectiveCamera(30, shadowMapWidth / shadowMapHeight, 100, 10000));
+		this.light.shadow.bias = -0.0001;
+		this.light.shadow.mapSize.width = shadowMapWidth;
+		this.light.shadow.mapSize.height = shadowMapHeight;
+	}
 
-		// DEBUG ONLY
-		this.scene.add( new THREE.CameraHelper( light.shadow.camera ) );
-		
-		this.lightShadowMapViewer = new THREE.ShadowMapViewer(light);
-		this.lightShadowMapViewer.position.x = 10;
-		this.lightShadowMapViewer.position.y = window.innerHeight - (shadowMapHeight / 4) - 10;
-		this.lightShadowMapViewer.size.width = shadowMapWidth / 4;
-		this.lightShadowMapViewer.size.height = shadowMapHeight / 4;
-		this.lightShadowMapViewer.update();
+	initDebugShadow() {
+		const debugShadows = getParam('debugShadows') !== '';
+		if (!debugShadows) return;
+
+		this.debugShadow = new DebugShadow(this.light, this.scene, this.renderer);
 	}
 
 	initPostProcessing() {
@@ -161,8 +165,7 @@ export default class WebGLView {
 		if (this.view.ui.postEnabled) this.composer.render(this.clock.getDelta());
 		else this.renderer.render(this.scene, this.camera);
 
-		// DEBUG ONLY
-		this.lightShadowMapViewer.render(this.renderer);
+		if (this.debugShadow) this.debugShadow.draw();
 	}
 
 	// ---------------------------------------------------------------------------------------------
