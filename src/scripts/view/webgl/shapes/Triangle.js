@@ -1,10 +1,13 @@
 import * as THREE from 'three';
+import EventEmitter from 'events';
 
 import Tetrahedron from './Tetrahedron';
 
-export default class Triangle {
+export default class Triangle extends EventEmitter {
 
 	constructor(interactive, audio) {
+		super();
+
 		this.interactive = interactive;
 		this.audio = audio;
 
@@ -84,6 +87,8 @@ export default class Triangle {
 
 			tetrahedron.on('tetrahedron:over', this.onTetrahedronOver.bind(this));
 			tetrahedron.on('tetrahedron:out', this.onTetrahedronOut.bind(this));
+			tetrahedron.on('tetrahedron:down', this.onTetrahedronDown.bind(this));
+			tetrahedron.on('tetrahedron:up', this.onTetrahedronUp.bind(this));
 		}
 	}
 
@@ -98,17 +103,36 @@ export default class Triangle {
 		}
 	}
 
+	gotoFace(index) {
+		for (let i = 0; i < this.data.length; i++) {
+			const tetrahedron = this.tetrahedra[i];
+			tetrahedron.gotoFace(index, false, tetrahedron.data.row * 0.1);
+		}
+	}
+
 	// ---------------------------------------------------------------------------------------------
 	// EVENT LISTENERS
 	// ---------------------------------------------------------------------------------------------
 
 	onTetrahedronOver(e) {
 		const tetrahedron = e.target;
-		this.audio.playNote('C4');
+
+		const notes = ['A3', 'C4', 'G4', 'E4'];
+		const note = notes[tetrahedron.currFace];
+
+		this.audio.playNote(note);
 	}
 
 	onTetrahedronOut(e) {
 		const tetrahedron = e.target;
 		this.audio.stopNote('C4');
+	}
+
+	onTetrahedronDown(e) {
+		this.emit('triangle:down', e);
+	}
+
+	onTetrahedronUp(e) {
+		this.emit('triangle:up', e);
 	}
 }

@@ -1,18 +1,19 @@
+import TweenMax from 'gsap';
 import * as THREE from 'three';
 import TrackballControls from 'three-trackballcontrols';
-import { EffectComposer, FilmPass, ShaderPass, RenderPass } from 'postprocessing';
+import { EffectComposer, BloomPass, ShaderPass, RenderPass } from 'postprocessing';
 
 import InteractiveWebGL from './interactive/InteractiveWebGL';
 import Triangle from './shapes/Triangle';
 import SkyBox from './sky/SkyBox';
 import FilmicPass from './passes/FilmicPass';
 import FilmicMaterial from './materials/FilmicMaterial';
+import Animations from './animations/Animations';
 
 // TODO remove this to save some bytes
 import DebugShadow from './lights/DebugShadow';
 
 import { getParam } from './../../utils/query.utils';
-
 
 const glslify = require('glslify');
 
@@ -31,6 +32,7 @@ export default class WebGLView {
 		this.initSky();
 		this.initLights();
 		this.initPostProcessing();
+		this.initAnimations();
 
 		this.initDebugShadow();
 	}
@@ -56,6 +58,8 @@ export default class WebGLView {
 		this.orthoCamera.position.z = 10;
 
 		this.camera = this.perspCamera;
+
+		this.center = new THREE.Vector3();
 	}
 
 	initControls() {
@@ -71,7 +75,7 @@ export default class WebGLView {
 		this.controls.staticMoving = false;
 		this.controls.dynamicDampingFactor = 0.15;
 		this.controls.maxDistance = 3000;
-		this.controls.enabled = true;
+		this.controls.enabled = false;
 	}
 
 	initInteractive() {
@@ -96,6 +100,9 @@ export default class WebGLView {
 	initTriangle() {
 		this.triangle = new Triangle(this.interactive, this.audio);
 		this.scene.add(this.triangle.object3D);
+
+		this.triangle.on('triangle:down', this.onTriangleDown.bind(this));
+		this.triangle.on('triangle:up', this.onTriangleUp.bind(this));
 	}
 
 	initSky() {
@@ -148,11 +155,24 @@ export default class WebGLView {
 			vignetteOffset: 0.0,
 		});
 
+		const bloom = new BloomPass({
+			kernelSize: 3,
+			intensity: 1,
+			distinction: 1,
+			// screenMode: false,
+		});
+		// bloom.renderToScreen = true;
+		this.composer.addPass(bloom);
+
 		const pass = new ShaderPass(this.filmicMaterial);
 		pass.renderToScreen = true;
 		this.composer.addPass(pass);
 
 		this.clock = new THREE.Clock();
+	}
+
+	initAnimations() {
+		this.animations = new Animations(this);
 	}
 
 	// ---------------------------------------------------------------------------------------------
@@ -163,8 +183,12 @@ export default class WebGLView {
 		if (this.controls) this.controls.update();
 
 		this.filmicMaterial.update(this.clock.getDelta());
-
 		this.triangle.update();
+		// this.updateHold();
+	}
+
+	updateHold() {
+		
 	}
 
 	draw() {
@@ -209,5 +233,23 @@ export default class WebGLView {
 
 	touchend() {
 		this.interactive.touchend();
+
+		// TODO improve this
+		this.onTriangleUp();
+	}
+
+	onTriangleDown(e) {
+		const tetrahedron = e.target;
+		this.isDown = true;
+		// this.timeDown = Date.now();
+
+		this.animations.start();
+	}
+
+	onTriangleUp(e) {
+		// const tetrahedron = e.target;
+		this.isDown = false;
+
+		this.animations.stop();
 	}
 }

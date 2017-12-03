@@ -14,7 +14,7 @@ export default class SkyBox {
 
     const geometry = new THREE.SphereGeometry(this.radius);
     const material = new THREE.MeshBasicMaterial({
-      color: 0xCCCCCC,
+      color: 0x1d1b21,
       // wireframe: true,
       // map: texture,
       side: THREE.BackSide,

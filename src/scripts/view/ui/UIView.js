@@ -7,9 +7,10 @@ export default class UIView {
 		this.view = view;
 
 		this.camOrtho = false;
+		this.camControls = false;
 
 		const material = this.view.webgl.filmicMaterial;
-		this.postEnabled = false;
+		this.postEnabled = true;
 		this.postBlur = material.defines.BLUR || false;
 		this.postDispersion = material.defines.DISPERSION || false;
 		this.postDistortion = material.defines.DISTORTION || false;
@@ -37,7 +38,7 @@ export default class UIView {
 
 	initControlKit() {
 		if (!app.debug) return;
-		
+
 		const that = this;
 
 		this.controlKit = new ControlKit();
@@ -46,6 +47,7 @@ export default class UIView {
 		.addGroup({label: 'Camera', enable: true })
 		// .addSlider(this, 'camOrtho', 'rangeCam', { label: 'x', onChange: () => { that.onCameraChange(); } })
 		.addCheckbox(this, 'camOrtho', { label: 'orthographic', onChange: () => { this.onCameraChange(); } })
+		.addCheckbox(this, 'camControls', { label: 'controls', onChange: () => { this.onCameraChange(); } })
 
 		.addGroup({label: 'Post Processing', enable: true })
 		.addCheckbox(this, 'postEnabled', { label: 'postprocessing', onChange: () => { this.onPostProcessingChange(); } })
@@ -81,6 +83,8 @@ export default class UIView {
 			webgl.camera.zoom = 20;
 			webgl.camera.updateProjectionMatrix();
 		}
+
+		webgl.controls.enabled = this.camControls;
 	}
 
 	onPostProcessingChange() {

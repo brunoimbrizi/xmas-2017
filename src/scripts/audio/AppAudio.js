@@ -34,8 +34,14 @@ export default class AppAudio {
 		// note = Gmajor[floor(random(Gmajor.length))];
 		// const notes = [48, 55, 60, 63, 67, 72];
 		// const notes = [3, 2, 24];
-		const notes = [17, 10, 12, 8, 5, 17, 12, 17];
-		note = this.keyToFreq(notes[floor(random(notes.length))]);
+		// const notes = [17, 10, 12, 8, 5, 17, 12, 17];
+		// const notes = ['A3', 'C4', 'D4', 'E4', 'G4', 'A4'];
+		// const notes = ['A3', 'C4', 'G4'];
+		// note = this.keyToFreq(notes[floor(random(notes.length))]);
+
+		// const index = (this.lastNote) ? this.lastNote : 0;
+		// note = notes[index];
+		// this.lastNote = (this.lastNote < notes.length - 1) ? this.lastNote + 1 : 0;
 		this.synth.triggerAttackRelease(note, '32n');
 	}
 

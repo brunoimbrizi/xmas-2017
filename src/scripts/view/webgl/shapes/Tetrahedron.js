@@ -51,14 +51,14 @@ export default class Tetrahedron extends InteractiveObject {
 		});
 
 		const colors = [];
-		colors.push(new THREE.Color(0xFF0000));
-		colors.push(new THREE.Color(0x00FF00));
-		colors.push(new THREE.Color(0x0000FF));
-		colors.push(new THREE.Color(0x00FFFF));
+		colors.push(new THREE.Color(0x52daab));
+		colors.push(new THREE.Color(0xfef7ca));
+		colors.push(new THREE.Color(0xfc8781));
+		colors.push(new THREE.Color(0x90bda0));
 
 		for (let i = 0; i < geometry.faces.length; i++) {
 			const face = geometry.faces[i];
-			const color = colors[1];
+			const color = colors[i];
 
 			for (let j = 0; j < 3; j++) {
 				face.vertexColors[j] = color;
@@ -123,7 +123,7 @@ export default class Tetrahedron extends InteractiveObject {
 		// this.object3D.children[0].rotation.x += 0.01;
 	}
 
-	gotoFace(index, immediate = false) {
+	gotoFace(index, immediate = false, delay = 0) {
 		this.currFace = index;
 		
 		let x, y, z;
@@ -155,6 +155,7 @@ export default class Tetrahedron extends InteractiveObject {
 				z = QUARTER_PI;
 				break;
 			}
+			/*
 			case 4: { 	// same as face 0
 				// x = atan(sqrt(2)) - HALF_PI;
 				// y = TWO_PI - QUARTER_PI;
@@ -164,7 +165,6 @@ export default class Tetrahedron extends InteractiveObject {
 				z = PI;
 				break;
 			}
-			/*
 			case 5: { 	// same as face 1
 				break;
 			}
@@ -187,7 +187,7 @@ export default class Tetrahedron extends InteractiveObject {
 			return;
 		}
 
-		TweenMax.to(this.mesh.rotation, 0.5, { x, y, z, ease: Quad.easeOut });
+		TweenMax.to(this.mesh.rotation, 0.5, { x, y, z, delay, ease: Quad.easeOut });
 	}
 
 	// ---------------------------------------------------------------------------------------------
@@ -197,7 +197,7 @@ export default class Tetrahedron extends InteractiveObject {
 	over() {
 		// console.log('Tetrahedron.over', this.data.index);
 		this.gotoFace(this.currFace + 1);
-		TweenMax.to(this.object3D.position, 0.5, { z: 5, ease: Quart.easeOut });
+		TweenMax.to(this.object3D.position, 0.5, { z: 10, ease: Quart.easeOut });
 
 		this.emit('tetrahedron:over', { target: this });
 	}
@@ -207,5 +207,13 @@ export default class Tetrahedron extends InteractiveObject {
 		TweenMax.to(this.object3D.position, 0.5, { z: 0, ease: Quart.easeOut });
 
 		this.emit('tetrahedron:out', { target: this });
+	}
+
+	down() {
+		this.emit('tetrahedron:down', { target: this });
+	}
+
+	up() {
+		this.emit('tetrahedron:up', { target: this });
 	}
 }

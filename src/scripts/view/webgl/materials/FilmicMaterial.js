@@ -15,17 +15,17 @@ export default class FilmicMaterial extends ShaderMaterial {
 			vignette: true,
 			eskil: false,
 
-			distortionK: 0.5,
-			distortionKcube: 0.1,
-			distortionScale: 0.9,
+			distortionK: 0.0,
+			distortionKcube: 0.0,
+			distortionScale: 1.0,
 
-			dispersionOffset: 0.1,
+			dispersionOffset: 0.0,
 
 			blurIntensity: 5,
 
-			noiseIntensity: 0.5,
+			noiseIntensity: 0.1,
 
-			scanlineIntensity: 0.1,
+			scanlineIntensity: 0.04,
 
 			vignetteOffset: 0.0,
 			vignetteDarkness: 0.5,
