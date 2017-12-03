@@ -18,7 +18,8 @@ const glslify = require('glslify');
 
 export default class WebGLView {
 
-	constructor(view) {
+	constructor(view, audio) {
+		this.audio = audio;
 		this.view = view;
 		this.renderer = this.view.renderer;
 
@@ -46,7 +47,7 @@ export default class WebGLView {
 
 		// camera
 		this.perspCamera = new THREE.PerspectiveCamera(30, window.innerWidth / window.innerHeight, 10, 10000);
-		this.perspCamera.position.z = 150;
+		this.perspCamera.position.z = 200;
 
 		// orthographic camera
 		this.hw = window.innerWidth * 0.5;
@@ -93,7 +94,7 @@ export default class WebGLView {
 	}
 
 	initTriangle() {
-		this.triangle = new Triangle(this.interactive);
+		this.triangle = new Triangle(this.interactive, this.audio);
 		this.scene.add(this.triangle.object3D);
 	}
 

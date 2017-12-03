@@ -58,7 +58,7 @@ export default class Tetrahedron extends InteractiveObject {
 
 		for (let i = 0; i < geometry.faces.length; i++) {
 			const face = geometry.faces[i];
-			const color = colors[i];
+			const color = colors[1];
 
 			for (let j = 0; j < 3; j++) {
 				face.vertexColors[j] = color;
@@ -198,10 +198,14 @@ export default class Tetrahedron extends InteractiveObject {
 		// console.log('Tetrahedron.over', this.data.index);
 		this.gotoFace(this.currFace + 1);
 		TweenMax.to(this.object3D.position, 0.5, { z: 5, ease: Quart.easeOut });
+
+		this.emit('tetrahedron:over', { target: this });
 	}
 
 	out() {
 		// this.gotoFace(this.currFace - 1);
 		TweenMax.to(this.object3D.position, 0.5, { z: 0, ease: Quart.easeOut });
+
+		this.emit('tetrahedron:out', { target: this });
 	}
 }

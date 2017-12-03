@@ -6,7 +6,8 @@ import UIView from './ui/UIView';
 
 export default class AppView {
 
-	constructor() {
+	constructor(audio) {
+		this.audio = audio;
 		this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
 
 		this.initSketch();
@@ -82,7 +83,7 @@ export default class AppView {
 		// move canvas to container
 		document.querySelector('#container').appendChild(this.renderer.domElement);
 		
-		this.webgl = new WebGLView(this);
+		this.webgl = new WebGLView(this, this.audio);
 	}
 
 	initUI() {

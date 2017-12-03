@@ -4,8 +4,9 @@ import Tetrahedron from './Tetrahedron';
 
 export default class Triangle {
 
-	constructor(interactive) {
+	constructor(interactive, audio) {
 		this.interactive = interactive;
+		this.audio = audio;
 
 		this.object3D = new THREE.Object3D;
 
@@ -80,6 +81,9 @@ export default class Triangle {
 			this.tetrahedra.push(tetrahedron);
 
 			this.interactive.interactiveObjects.push(tetrahedron.hitArea);
+
+			tetrahedron.on('tetrahedron:over', this.onTetrahedronOver.bind(this));
+			tetrahedron.on('tetrahedron:out', this.onTetrahedronOut.bind(this));
 		}
 	}
 
@@ -92,5 +96,19 @@ export default class Triangle {
 			const tetrahedron = this.tetrahedra[i];
 			tetrahedron.update();
 		}
+	}
+
+	// ---------------------------------------------------------------------------------------------
+	// EVENT LISTENERS
+	// ---------------------------------------------------------------------------------------------
+
+	onTetrahedronOver(e) {
+		const tetrahedron = e.target;
+		this.audio.playNote('C4');
+	}
+
+	onTetrahedronOut(e) {
+		const tetrahedron = e.target;
+		this.audio.stopNote('C4');
 	}
 }
