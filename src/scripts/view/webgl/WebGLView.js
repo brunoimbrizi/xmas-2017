@@ -155,14 +155,14 @@ export default class WebGLView {
 			vignetteOffset: 0.0,
 		});
 
-		const bloom = new BloomPass({
+		this.bloomPass = new BloomPass({
 			kernelSize: 3,
 			intensity: 1,
 			distinction: 1,
 			// screenMode: false,
 		});
 		// bloom.renderToScreen = true;
-		this.composer.addPass(bloom);
+		this.composer.addPass(this.bloomPass);
 
 		const pass = new ShaderPass(this.filmicMaterial);
 		pass.renderToScreen = true;

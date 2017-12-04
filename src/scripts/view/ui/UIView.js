@@ -28,6 +28,10 @@ export default class UIView {
 		this.postScanlineIntensity = material.uniforms.scanlineIntensity.value;
 		this.postScanlineDensity = material.scanlineDensity;
 
+		this.bloomIntensity = this.view.webgl.bloomPass.intensity;
+		this.bloomDistinction = this.view.webgl.bloomPass.distinction;
+		this.bloomKernelSize = this.view.webgl.bloomPass.kernelSize;
+
 		this.range = [0, 1];
 		this.rangeBlur = [0, 10];
 		this.rangeDistortion = [0, 5];
@@ -51,6 +55,13 @@ export default class UIView {
 
 		.addGroup({label: 'Post Processing', enable: true })
 		.addCheckbox(this, 'postEnabled', { label: 'postprocessing', onChange: () => { this.onPostProcessingChange(); } })
+
+		.addSubGroup({ label: 'Bloom', enabled: true })
+		.addSlider(this, 'bloomIntensity', 'rangeDistortion', { label: 'intensity', onChange: () => { that.onBloomChange(); } })
+		.addSlider(this, 'bloomDistinction', 'rangeDistortion', { label: 'distinction', onChange: () => { that.onBloomChange(); } })
+		.addSlider(this, 'bloomKernelSize', 'rangeDistortion', { label: 'kernel size', step: 1, dp: 0, onChange: () => { that.onBloomChange(); } })
+
+		.addSubGroup({ label: 'Filmic', enabled: true })
 		// .addCheckbox(this, 'postBlur', { label: 'blur', onChange: () => { this.onPostProcessingChange(); } })
 		.addSlider(this, 'postBlurIntensity', 'rangeBlur', { label: 'blur intensity', onChange: () => { that.onPostProcessingChange(); } })
 		// .addCheckbox(this, 'postDispersion', { label: 'dispersion', onChange: () => { this.onPostProcessingChange(); } })
@@ -112,5 +123,12 @@ export default class UIView {
 
 		material.scanlineDensity = this.postScanlineDensity;
 		material.resize();
+	}
+
+	onBloomChange() {
+		const pass = this.view.webgl.bloomPass;
+		pass.intensity = this.bloomIntensity;
+		pass.distinction = this.bloomDistinction;
+		pass.kernelSize = floor(this.bloomKernelSize);
 	}
 }
