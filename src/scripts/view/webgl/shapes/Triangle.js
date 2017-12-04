@@ -106,7 +106,7 @@ export default class Triangle extends EventEmitter {
 	gotoFace(index) {
 		for (let i = 0; i < this.data.length; i++) {
 			const tetrahedron = this.tetrahedra[i];
-			tetrahedron.gotoFace(index, false, tetrahedron.data.row * 0.1);
+			tetrahedron.gotoFace(index, false, tetrahedron.data.index * 0.01);
 		}
 	}
 
