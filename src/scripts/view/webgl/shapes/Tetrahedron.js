@@ -1,6 +1,8 @@
 import * as THREE from 'three';
 import TweenMax from 'gsap';
 
+import { MeshLine, MeshLineMaterial } from './../../../../vendors/THREE.MeshLine.js';
+
 import InteractiveObject from './../interactive/InteractiveObject';
 
 export default class Tetrahedron extends InteractiveObject {
@@ -33,6 +35,7 @@ export default class Tetrahedron extends InteractiveObject {
 		this.initMesh();
 		// this.initBoundingBox();
 		this.initHitArea();
+		// this.initOutline();
 
 		this.gotoFace(0, true);
 	}
@@ -59,11 +62,14 @@ export default class Tetrahedron extends InteractiveObject {
 		for (let i = 0; i < geometry.faces.length; i++) {
 			const face = geometry.faces[i];
 			const color = colors[i];
+			// const color = new THREE.Color(0xFFFFFF);
 
 			for (let j = 0; j < 3; j++) {
 				face.vertexColors[j] = color;
 			}
 		}
+
+		// material.visible = false;
 
 		const mesh = new THREE.Mesh(geometry, material);
 		mesh.castShadow = true;
@@ -113,6 +119,37 @@ export default class Tetrahedron extends InteractiveObject {
 
 		// set interactive target
 		this.hitArea.interactive = this;
+	}
+
+	initOutline() {
+		const geometry = new THREE.Geometry();
+
+		geometry.vertices.push(new THREE.Vector3(0, this.height * 0.5));
+		geometry.vertices.push(new THREE.Vector3(this.width * 0.5, -this.height * 0.5));
+		geometry.vertices.push(new THREE.Vector3(-this.width * 0.5, -this.height * 0.5));
+		geometry.vertices.push(new THREE.Vector3(0, this.height * 0.5));
+
+		const line = new MeshLine();
+		line.setGeometry(geometry);
+
+		const material = new MeshLineMaterial({
+			resolution: new THREE.Vector2(window.innerWidth, window.innerHeight),
+			lineWidth: 1,
+			sizeAttenuation: true,
+		});
+
+		/*
+		const material = new THREE.LineBasicMaterial({
+			color: 0xFFFFFF,
+			linewidth: 10,
+		});
+		*/
+
+		this.outline = new THREE.Mesh(line.geometry, material);
+		this.object3D.add(this.outline);
+
+		// offset
+		this.outline.position.z = this.height * 0.5;
 	}
 
 	// ---------------------------------------------------------------------------------------------
@@ -197,14 +234,18 @@ export default class Tetrahedron extends InteractiveObject {
 	over() {
 		// console.log('Tetrahedron.over', this.data.index);
 		this.gotoFace(this.currFace + 1);
-		TweenMax.to(this.object3D.position, 0.5, { z: 10, ease: Quart.easeOut });
+		TweenMax.to(this.mesh.position, 0.5, { z: this.offset.z + 10, ease: Quart.easeOut, onStart: () => {
+			// this.mesh.material.visible = true;
+		} });
 
 		this.emit('tetrahedron:over', { target: this });
 	}
 
 	out() {
 		// this.gotoFace(this.currFace - 1);
-		TweenMax.to(this.object3D.position, 0.5, { z: 0, ease: Quart.easeOut });
+		TweenMax.to(this.mesh.position, 0.5, { z: this.offset.z + 0, ease: Quart.easeOut, onComplete: () => {
+			// this.mesh.material.visible = false;
+		} });
 
 		this.emit('tetrahedron:out', { target: this });
 	}

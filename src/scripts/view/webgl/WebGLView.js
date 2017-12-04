@@ -235,7 +235,7 @@ export default class WebGLView {
 		this.interactive.touchend();
 
 		// TODO improve this
-		this.onTriangleUp();
+		// this.onTriangleUp();
 	}
 
 	onTriangleDown(e) {
