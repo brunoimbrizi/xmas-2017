@@ -47,7 +47,7 @@ export default class Tetrahedron extends InteractiveObject {
 
 		const material = new THREE.MeshLambertMaterial({
 			color: 0xFFFFFF,
-			vertexColors: THREE.VertexColors,
+			vertexColors: THREE.FaceColors,
 			// wireframe: true,
 			// transparent: true,
 			// opacity: 0.5,
@@ -62,11 +62,7 @@ export default class Tetrahedron extends InteractiveObject {
 		for (let i = 0; i < geometry.faces.length; i++) {
 			const face = geometry.faces[i];
 			const color = colors[i];
-			// const color = new THREE.Color(0xFFFFFF);
-
-			for (let j = 0; j < 3; j++) {
-				face.vertexColors[j] = color;
-			}
+			face.color = color;
 		}
 
 		// material.visible = false;
@@ -156,8 +152,24 @@ export default class Tetrahedron extends InteractiveObject {
 	// PUBLIC
 	// ---------------------------------------------------------------------------------------------
 
-	update() {
-		// this.object3D.children[0].rotation.x += 0.01;
+	show() {
+
+	}
+
+	hide() {
+		const geometry = this.mesh.geometry;
+		const next = (this.currFace < 3) ? this.currFace + 1 : 0;
+		let faceIndex = next;
+		
+		// it looks nicer if face 1 is geometry.face 2
+		if (next == 1) faceIndex = 2;
+		else if (next == 2) faceIndex = 1;
+
+		const face = geometry.faces[faceIndex];
+		face.color.setHex(0x1d1b21);
+		geometry.colorsNeedUpdate = true;
+
+		this.gotoFace(next);
 	}
 
 	gotoFace(index, immediate = false, delay = 0) {

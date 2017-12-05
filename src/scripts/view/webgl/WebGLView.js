@@ -184,11 +184,6 @@ export default class WebGLView {
 
 		this.filmicMaterial.update(this.clock.getDelta());
 		this.triangle.update();
-		// this.updateHold();
-	}
-
-	updateHold() {
-		
 	}
 
 	draw() {
@@ -196,6 +191,10 @@ export default class WebGLView {
 		else this.renderer.render(this.scene, this.camera);
 
 		if (this.debugShadow) this.debugShadow.draw();
+	}
+
+	show() {
+		this.triangle.show();
 	}
 
 	// ---------------------------------------------------------------------------------------------

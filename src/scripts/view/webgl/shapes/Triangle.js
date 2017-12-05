@@ -59,7 +59,7 @@ export default class Triangle extends EventEmitter {
 		str = `${str}\n`;
 
 		console.log(str);
-		console.log(this.data);
+		// console.log(this.data);
 
 		this.rows = rows;
 		this.cols = cols;
@@ -92,19 +92,48 @@ export default class Triangle extends EventEmitter {
 		}
 	}
 
+	getMiddle() {
+		const row = ceil(this.rows * 0.5);
+		const col = floor(this.cols * 0.5);
+
+		return this.getByRowCol(row, col);
+	}
+
+	getByRowCol(row, col) {
+		for (let i = 0; i < this.tetrahedra.length; i++) {
+			const tetrahedron = this.tetrahedra[i];
+			if (tetrahedron.data.row !== row) continue;
+			if (tetrahedron.data.col !== col) continue;
+			return tetrahedron;
+		}
+	}
+
 	// ---------------------------------------------------------------------------------------------
 	// PUBLIC
 	// ---------------------------------------------------------------------------------------------
 
-	update() {
-		for (let i = 0; i < this.data.length; i++) {
+	show() {
+		const middle = this.getMiddle();
+
+		for (let i = 0; i < this.tetrahedra.length; i++) {
 			const tetrahedron = this.tetrahedra[i];
-			tetrahedron.update();
+			if (tetrahedron === middle) continue;
+
+			tetrahedron.hide();
 		}
 	}
 
+	update() {
+		/*
+		for (let i = 0; i < this.tetrahedra.length; i++) {
+			const tetrahedron = this.tetrahedra[i];
+			tetrahedron.update();
+		}
+		*/
+	}
+
 	gotoFace(index) {
-		for (let i = 0; i < this.data.length; i++) {
+		for (let i = 0; i < this.tetrahedra.length; i++) {
 			const tetrahedron = this.tetrahedra[i];
 			tetrahedron.gotoFace(index, false, tetrahedron.data.index * 0.01);
 		}
