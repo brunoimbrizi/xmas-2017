@@ -119,7 +119,18 @@ export default class Triangle extends EventEmitter {
 			const tetrahedron = this.tetrahedra[i];
 			if (tetrahedron === middle) continue;
 
-			tetrahedron.hide();
+			tetrahedron.show(tetrahedron.data.index * 0.01);
+		}
+	}
+
+	hide() {
+		const middle = this.getMiddle();
+
+		for (let i = 0; i < this.tetrahedra.length; i++) {
+			const tetrahedron = this.tetrahedra[i];
+			if (tetrahedron === middle) continue;
+
+			tetrahedron.hide(tetrahedron.data.index * 0.01);
 		}
 	}
 

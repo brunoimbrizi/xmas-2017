@@ -32,12 +32,22 @@ export default class Tetrahedron extends InteractiveObject {
 
 		this.object3D = new THREE.Object3D();
 
+		this.initColors();
 		this.initMesh();
 		// this.initBoundingBox();
 		this.initHitArea();
 		// this.initOutline();
 
+		this.resetColors();
 		this.gotoFace(0, true);
+	}
+
+	initColors() {
+		this.colors = [];
+		this.colors.push(new THREE.Color(0x52daab));
+		this.colors.push(new THREE.Color(0xfef7ca));
+		this.colors.push(new THREE.Color(0xfc8781));
+		this.colors.push(new THREE.Color(0x90bda0));
 	}
 
 	initMesh() {
@@ -52,20 +62,6 @@ export default class Tetrahedron extends InteractiveObject {
 			// transparent: true,
 			// opacity: 0.5,
 		});
-
-		const colors = [];
-		colors.push(new THREE.Color(0x52daab));
-		colors.push(new THREE.Color(0xfef7ca));
-		colors.push(new THREE.Color(0xfc8781));
-		colors.push(new THREE.Color(0x90bda0));
-
-		for (let i = 0; i < geometry.faces.length; i++) {
-			const face = geometry.faces[i];
-			const color = colors[i];
-			face.color = color;
-		}
-
-		// material.visible = false;
 
 		const mesh = new THREE.Mesh(geometry, material);
 		mesh.castShadow = true;
@@ -148,28 +144,42 @@ export default class Tetrahedron extends InteractiveObject {
 		this.outline.position.z = this.height * 0.5;
 	}
 
+	resetColors() {
+		const geometry = this.mesh.geometry;
+
+		for (let i = 0; i < geometry.faces.length; i++) {
+			const face = geometry.faces[i];
+			face.color.copy(this.colors[i]);
+		}
+
+		geometry.colorsNeedUpdate = true;
+	}
+
 	// ---------------------------------------------------------------------------------------------
 	// PUBLIC
 	// ---------------------------------------------------------------------------------------------
 
-	show() {
+	show(delay) {
+		const fromColor = 0x000000;
+		const origColor = this.mesh.geometry.faces[2].color.getHex();
 
+		// currFace 1 is geometry.face 2 and vice-versa
+		this.mesh.geometry.faces[2].color.setHex(fromColor);
+		this.mesh.geometry.colorsNeedUpdate = true;
+
+		this.gotoFace(1, true);
+		this.gotoFace(0, false, delay);
+
+		TweenMax.to(this.mesh.material, 0.5, { opacity: 1, delay, onComplete: () => {
+			this.mesh.material.transparent = false;
+			this.mesh.geometry.faces[2].color.setHex(origColor);
+			this.mesh.geometry.colorsNeedUpdate = true;
+		} });
 	}
 
-	hide() {
-		const geometry = this.mesh.geometry;
-		const next = (this.currFace < 3) ? this.currFace + 1 : 0;
-		let faceIndex = next;
-		
-		// it looks nicer if face 1 is geometry.face 2
-		if (next == 1) faceIndex = 2;
-		else if (next == 2) faceIndex = 1;
-
-		const face = geometry.faces[faceIndex];
-		face.color.setHex(0x1d1b21);
-		geometry.colorsNeedUpdate = true;
-
-		this.gotoFace(next);
+	hide(delay = 0, color = 0x000000) {
+		this.mesh.material.transparent = true;
+		TweenMax.to(this.mesh.material, 0.5, { opacity: 0, delay, ease: Quart.easeOut });
 	}
 
 	gotoFace(index, immediate = false, delay = 0) {
