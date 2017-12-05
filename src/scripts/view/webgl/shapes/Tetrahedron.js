@@ -3,6 +3,7 @@ import TweenMax from 'gsap';
 
 import { MeshLine, MeshLineMaterial } from './../../../../vendors/THREE.MeshLine.js';
 
+import TetrahedronFace from './TetrahedronFace';
 import InteractiveObject from './../interactive/InteractiveObject';
 
 export default class Tetrahedron extends InteractiveObject {
@@ -41,6 +42,34 @@ export default class Tetrahedron extends InteractiveObject {
 	}
 
 	initMesh() {
+		this.faces = [];
+		this.faces.push(new TetrahedronFace(this.faces.length, 2, 1, 0));
+		this.faces.push(new TetrahedronFace(this.faces.length, 1, 3, 0));
+		this.faces.push(new TetrahedronFace(this.faces.length, 0, 3, 2));
+		this.faces.push(new TetrahedronFace(this.faces.length, 2, 3, 1));
+
+		const colors = [];
+		colors.push(new THREE.Color(0x52daab));
+		colors.push(new THREE.Color(0xfc8781));
+		colors.push(new THREE.Color(0xfef7ca));
+		colors.push(new THREE.Color(0x90bda0));
+
+		this.mesh = new THREE.Object3D();
+		for (let i = 0; i < this.faces.length; i++) {
+			const face = this.faces[i];
+			face.mesh.scale.set(this.rc, this.rc, this.rc);
+			face.mesh.material.color.copy(colors[i]);
+			this.mesh.add(face.mesh);
+		}
+
+		this.mesh.position.y = -this.offset.y;
+		this.mesh.position.z = this.offset.z;
+		
+		this.object3D.add(this.mesh);
+	}
+
+	/*
+	initMesh() {
 		// const geometry = new THREE.ConeBufferGeometry(this.width, this.height, 3);
 		const geometry = new THREE.TetrahedronGeometry(this.rc);
 		// const geometry = new THREE.BoxBufferGeometry(this.width, this.height, this.width);
@@ -77,6 +106,7 @@ export default class Tetrahedron extends InteractiveObject {
 		this.mesh = mesh;
 		this.object3D.add(mesh);
 	}
+	*/
 
 	initBoundingBox() {
 		const geometry = new THREE.BoxBufferGeometry(this.height, this.height, this.height);
@@ -159,15 +189,9 @@ export default class Tetrahedron extends InteractiveObject {
 	hide() {
 		const geometry = this.mesh.geometry;
 		const next = (this.currFace < 3) ? this.currFace + 1 : 0;
-		let faceIndex = next;
-		
-		// it looks nicer if face 1 is geometry.face 2
-		if (next == 1) faceIndex = 2;
-		else if (next == 2) faceIndex = 1;
 
-		const face = geometry.faces[faceIndex];
-		face.color.setHex(0x1d1b21);
-		geometry.colorsNeedUpdate = true;
+		const face = this.faces[next];
+		face.mesh.material.side = THREE.BackSide;
 
 		this.gotoFace(next);
 	}
