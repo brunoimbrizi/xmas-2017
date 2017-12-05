@@ -37,7 +37,7 @@ export default class UIView {
 		this.rangeDistortion = [0, 5];
 
 		this.initControlKit();
-		// this.initStats();
+		this.initStats();
 	}
 
 	initControlKit() {
