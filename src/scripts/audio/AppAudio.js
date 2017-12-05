@@ -37,8 +37,8 @@ export default class AppAudio {
 		// const notes = [17, 10, 12, 8, 5, 17, 12, 17];
 		// const notes = ['A3', 'C4', 'D4', 'E4', 'G4', 'A4'];
 		const notes = [
-			'B3', 'B3', 'B3', 'B3', 'B3', 'B3', 'B3', 'D4', 'G3', 'A3', 'B3',
-			'C4', 'C4', 'C4', 'C4', 'B3', 'B3', 'B3', 'B3', 'B3', 'A3', 'A3', 'B3', 'A3', 'D4',
+			'B3', 'B3', 'B3', 'B3', 'B3', 'B3', 'D4', 'G3', 'A3', 'B3',
+			'C4', 'C4', 'C4', 'C4', 'C4', 'B3', 'B3', 'B3', 'B3', 'B3', 'A3', 'A3', 'B3', 'A3', 'D4',
 		];
 		// note = this.keyToFreq(notes[floor(random(notes.length))]);
 
