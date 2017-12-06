@@ -170,6 +170,8 @@ export default class Tetrahedron extends InteractiveObject {
 		this.gotoFace(1, 0, true);
 		this.gotoFace(0, delay);
 
+		this.mesh.visible = true;
+
 		TweenMax.to(this.mesh.material, 0.5, { opacity: 1, delay, onComplete: () => {
 			this.mesh.material.transparent = false;
 			this.mesh.geometry.faces[2].color.setHex(origColor);
@@ -184,10 +186,13 @@ export default class Tetrahedron extends InteractiveObject {
 
 		if (immediate) {
 			this.mesh.material.opacity = 0;
+			this.mesh.visible = false;
 			return;
 		}
 
-		TweenMax.to(this.mesh.material, 0.5, { opacity: 0, delay, ease: Quart.easeOut });
+		TweenMax.to(this.mesh.material, 0.5, { opacity: 0, delay, ease: Quart.easeOut, onComplete: () => {
+			this.mesh.visible = false;
+		} });
 	}
 
 	gotoFace(index, delay = 0, immediate = false) {
