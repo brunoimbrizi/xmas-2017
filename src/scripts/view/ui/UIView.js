@@ -90,9 +90,10 @@ export default class UIView {
 		const webgl = this.view.webgl;
 		webgl.camera = (this.camOrtho) ? webgl.orthoCamera : webgl.perspCamera;
 		webgl.composer.passes[0].camera = webgl.camera;
+		webgl.interactive.camera = webgl.camera;
 
 		if (this.camOrtho) {
-			webgl.camera.zoom = 20;
+			webgl.camera.zoom = 15;
 			webgl.camera.updateProjectionMatrix();
 		}
 
