@@ -22,6 +22,8 @@ export default class AppAudio {
 				release: 1.8,
 			}
 		} ).toMaster();
+
+		this.lastNote = 0;
 	}
 
 	keyToFreq(p) { 
@@ -36,14 +38,25 @@ export default class AppAudio {
 		// const notes = [3, 2, 24];
 		// const notes = [17, 10, 12, 8, 5, 17, 12, 17];
 		// const notes = ['A3', 'C4', 'D4', 'E4', 'G4', 'A4'];
+
+		// jingle bells
+		// const notes = [
+			// 'B3', 'B3', 'B3', 'B3', 'B3', 'B3', 'D4', 'G3', 'A3', 'B3',
+			// 'C4', 'C4', 'C4', 'C4', 'C4', 'B3', 'B3', 'B3', 'B3', 'B3', 'A3', 'A3', 'B3', 'A3', 'D4',
+		// ];
+
+		// so this is christmas
 		const notes = [
-			'B3', 'B3', 'B3', 'B3', 'B3', 'B3', 'D4', 'G3', 'A3', 'B3',
-			'C4', 'C4', 'C4', 'C4', 'C4', 'B3', 'B3', 'B3', 'B3', 'B3', 'A3', 'A3', 'B3', 'A3', 'D4',
+			'A4', 'B4', 'C#5', 'A4', 'E4',
+			'E4', 'A4', 'B4', 'C#5', 'B4',
+			'F4', 'C#5', 'D#5', 'E5', 'D#5', 'C#5',
+			'E4', 'C#5', 'E5', 'C#5', 'B4', 'A4',
 		];
+
+
 		// note = this.keyToFreq(notes[floor(random(notes.length))]);
 
-		const index = (this.lastNote) ? this.lastNote : 0;
-		note = notes[index];
+		note = notes[this.lastNote];
 		this.lastNote = (this.lastNote < notes.length - 1) ? this.lastNote + 1 : 0;
 		this.synth.triggerAttackRelease(note, '32n');
 	}
