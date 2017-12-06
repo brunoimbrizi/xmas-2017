@@ -5,6 +5,8 @@ import { MeshLine, MeshLineMaterial } from './../../../../vendors/THREE.MeshLine
 
 import InteractiveObject from './../interactive/InteractiveObject';
 
+const glslify = require('glslify');
+
 export default class Tetrahedron extends InteractiveObject {
 
 	static get WIDTH() { return 10; }
@@ -55,6 +57,7 @@ export default class Tetrahedron extends InteractiveObject {
 		const geometry = new THREE.TetrahedronGeometry(this.rc);
 		// const geometry = new THREE.BoxBufferGeometry(this.width, this.height, this.width);
 
+		
 		const material = new THREE.MeshLambertMaterial({
 			color: 0xFFFFFF,
 			vertexColors: THREE.FaceColors,
@@ -62,6 +65,22 @@ export default class Tetrahedron extends InteractiveObject {
 			// transparent: true,
 			// opacity: 0.5,
 		});
+		
+
+		/*
+		const material = new THREE.ShaderMaterial({
+			uniforms: {
+				c: { value: 1.0 },
+				p: { value: 2.4 },
+				color: { value: new THREE.Color(0x0ee7e6) },
+			},
+			vertexShader: glslify('../../../../shaders/glow.vert'),
+			fragmentShader: glslify('../../../../shaders/glow.frag'),
+			// side: THREE.FrontSide,
+			blending: THREE.AdditiveBlending,
+			transparent: true,
+		});
+		*/
 
 		const mesh = new THREE.Mesh(geometry, material);
 		mesh.castShadow = true;
