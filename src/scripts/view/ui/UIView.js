@@ -80,6 +80,7 @@ export default class UIView {
 	}
 
 	initStats() {
+		if (!app.debug) return;
 		this.stats = new Stats();
 
 		document.body.appendChild(this.stats.dom);
