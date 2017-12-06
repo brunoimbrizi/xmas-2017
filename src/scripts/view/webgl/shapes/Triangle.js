@@ -15,6 +15,8 @@ export default class Triangle extends EventEmitter {
 
 		this.initData();
 		this.initThetahedra();
+
+		this.hide(true);
 	}
 
 	initData() {
@@ -123,14 +125,14 @@ export default class Triangle extends EventEmitter {
 		}
 	}
 
-	hide() {
+	hide(immediate) {
 		const middle = this.getMiddle();
 
 		for (let i = 0; i < this.tetrahedra.length; i++) {
 			const tetrahedron = this.tetrahedra[i];
 			if (tetrahedron === middle) continue;
 
-			tetrahedron.hide(tetrahedron.data.index * 0.01);
+			tetrahedron.hide(tetrahedron.data.index * 0.01, immediate);
 		}
 	}
 
@@ -146,7 +148,7 @@ export default class Triangle extends EventEmitter {
 	gotoFace(index) {
 		for (let i = 0; i < this.tetrahedra.length; i++) {
 			const tetrahedron = this.tetrahedra[i];
-			tetrahedron.gotoFace(index, false, tetrahedron.data.index * 0.01);
+			tetrahedron.gotoFace(index, tetrahedron.data.index * 0.01);
 		}
 	}
 
@@ -169,10 +171,22 @@ export default class Triangle extends EventEmitter {
 	}
 
 	onTetrahedronDown(e) {
+		if (!this.firstUp) return;
 		this.emit('triangle:down', e);
 	}
 
 	onTetrahedronUp(e) {
+		if (!this.firstUp) {
+			this.firstUp = true;
+			this.show();
+			return;
+		}
+
+		const tetrahedron = e.target;
+		const next = tetrahedron.currFace;
+		
+		this.gotoFace(next);
+
 		this.emit('triangle:up', e);
 	}
 }

@@ -5,6 +5,7 @@ export default class InteractiveObject extends EventEmitter {
   constructor(params) {
     super();
     this.selected = false;
+    this.enabled = true;
 
     // mask: intersects with mouse, but does nothing
     this.mask = params && params.mask;

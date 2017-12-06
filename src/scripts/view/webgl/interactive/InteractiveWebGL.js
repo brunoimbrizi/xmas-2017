@@ -105,6 +105,11 @@ export default class InteractiveWebGL {
           }
         }
         if (!this.intersected) return;
+        if (!this.intersected.interactive.enabled) {
+          this.intersected = null;
+          this.container.style.cursor = 'auto';
+          return;
+        }
         this.intersected.interactive.over();
         this.container.style.cursor = 'pointer';
       }

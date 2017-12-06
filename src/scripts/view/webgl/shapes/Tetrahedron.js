@@ -39,7 +39,7 @@ export default class Tetrahedron extends InteractiveObject {
 		// this.initOutline();
 
 		this.resetColors();
-		this.gotoFace(0, true);
+		this.gotoFace(0, 0, true);
 	}
 
 	initColors() {
@@ -167,22 +167,30 @@ export default class Tetrahedron extends InteractiveObject {
 		this.mesh.geometry.faces[2].color.setHex(fromColor);
 		this.mesh.geometry.colorsNeedUpdate = true;
 
-		this.gotoFace(1, true);
-		this.gotoFace(0, false, delay);
+		this.gotoFace(1, 0, true);
+		this.gotoFace(0, delay);
 
 		TweenMax.to(this.mesh.material, 0.5, { opacity: 1, delay, onComplete: () => {
 			this.mesh.material.transparent = false;
 			this.mesh.geometry.faces[2].color.setHex(origColor);
 			this.mesh.geometry.colorsNeedUpdate = true;
+			this.enabled = true;
 		} });
 	}
 
-	hide(delay = 0, color = 0x000000) {
+	hide(delay = 0, immediate = false) {
+		this.enabled = false;
 		this.mesh.material.transparent = true;
+
+		if (immediate) {
+			this.mesh.material.opacity = 0;
+			return;
+		}
+
 		TweenMax.to(this.mesh.material, 0.5, { opacity: 0, delay, ease: Quart.easeOut });
 	}
 
-	gotoFace(index, immediate = false, delay = 0) {
+	gotoFace(index, delay = 0, immediate = false) {
 		this.currFace = index;
 		
 		let x, y, z;
@@ -254,6 +262,7 @@ export default class Tetrahedron extends InteractiveObject {
 	// ---------------------------------------------------------------------------------------------
 
 	over() {
+		if (!this.enabled) return;
 		// console.log('Tetrahedron.over', this.data.index);
 		this.gotoFace(this.currFace + 1);
 		TweenMax.to(this.mesh.position, 0.5, { z: this.offset.z + 10, ease: Quart.easeOut, onStart: () => {
@@ -264,6 +273,7 @@ export default class Tetrahedron extends InteractiveObject {
 	}
 
 	out() {
+		if (!this.enabled) return;
 		// this.gotoFace(this.currFace - 1);
 		TweenMax.to(this.mesh.position, 0.5, { z: this.offset.z + 0, ease: Quart.easeOut, onComplete: () => {
 			// this.mesh.material.visible = false;
@@ -273,10 +283,12 @@ export default class Tetrahedron extends InteractiveObject {
 	}
 
 	down() {
+		if (!this.enabled) return;
 		this.emit('tetrahedron:down', { target: this });
 	}
 
 	up() {
+		if (!this.enabled) return;
 		this.emit('tetrahedron:up', { target: this });
 	}
 }
