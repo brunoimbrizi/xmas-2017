@@ -110,6 +110,17 @@ export default class Triangle extends EventEmitter {
 		}
 	}
 
+	getAllSameFace() {
+		let face = null;
+		for (let i = 0; i < this.tetrahedra.length; i++) {
+			const tetrahedron = this.tetrahedra[i];
+			if (face === null) face = tetrahedron.currFace;
+			if (face !== tetrahedron.currFace) return false;
+		}
+
+		return true;
+	}
+
 	// ---------------------------------------------------------------------------------------------
 	// PUBLIC
 	// ---------------------------------------------------------------------------------------------
@@ -183,7 +194,8 @@ export default class Triangle extends EventEmitter {
 		}
 
 		const tetrahedron = e.target;
-		const next = tetrahedron.currFace;
+		let next = tetrahedron.currFace;
+		if (this.getAllSameFace()) next++;
 		
 		this.gotoFace(next);
 
