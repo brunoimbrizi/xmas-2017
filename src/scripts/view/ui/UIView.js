@@ -32,6 +32,9 @@ export default class UIView {
 		this.bloomDistinction = this.view.webgl.bloomPass.distinction;
 		this.bloomKernelSize = this.view.webgl.bloomPass.kernelSize;
 
+		this.glowC = 1.4;
+		this.glowP = 2.4;
+
 		this.range = [0, 1];
 		this.rangeBlur = [0, 10];
 		this.rangeDistortion = [0, 5];
@@ -77,6 +80,11 @@ export default class UIView {
 		.addSlider(this, 'postScanlineIntensity', 'range', { label: 'scanline intensity', onChange: () => { that.onPostProcessingChange(); } })
 		.addCheckbox(this, 'postVignette', { label: 'vignette', onChange: () => { this.onPostProcessingChange(); } })
 		.addCheckbox(this, 'postEskil', { label: 'eskil', onChange: () => { this.onPostProcessingChange(); } })
+
+		.addGroup({label: 'Material', enable: true })
+		.addSubGroup({ label: 'Glow', enabled: true })
+		.addSlider(this, 'glowC', 'rangeDistortion', { label: 'c', onChange: () => { that.onMaterialChange(); } })
+		.addSlider(this, 'glowP', 'rangeDistortion', { label: 'p', onChange: () => { that.onMaterialChange(); } })
 	}
 
 	initStats() {
@@ -132,5 +140,15 @@ export default class UIView {
 		pass.intensity = this.bloomIntensity;
 		pass.distinction = this.bloomDistinction;
 		pass.kernelSize = floor(this.bloomKernelSize);
+	}
+
+	onMaterialChange() {
+		const triangle = this.view.webgl.triangle;
+
+		for (let i = 0; i < triangle.tetrahedra.length; i++) {
+			const tetrahedron = triangle.tetrahedra[i];
+			tetrahedron.mesh.material.uniforms.c.value = this.glowC;
+			tetrahedron.mesh.material.uniforms.p.value = this.glowP;
+		}
 	}
 }

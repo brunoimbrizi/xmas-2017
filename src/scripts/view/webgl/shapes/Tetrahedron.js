@@ -57,7 +57,7 @@ export default class Tetrahedron extends InteractiveObject {
 		const geometry = new THREE.TetrahedronGeometry(this.rc);
 		// const geometry = new THREE.BoxBufferGeometry(this.width, this.height, this.width);
 
-		
+		/*
 		const material = new THREE.MeshLambertMaterial({
 			color: 0xFFFFFF,
 			vertexColors: THREE.FaceColors,
@@ -65,22 +65,22 @@ export default class Tetrahedron extends InteractiveObject {
 			// transparent: true,
 			// opacity: 0.5,
 		});
-		
+		*/
 
-		/*
+		
 		const material = new THREE.ShaderMaterial({
 			uniforms: {
-				c: { value: 1.0 },
+				c: { value: 1.4 },
 				p: { value: 2.4 },
 				color: { value: new THREE.Color(0x0ee7e6) },
 			},
 			vertexShader: glslify('../../../../shaders/glow.vert'),
 			fragmentShader: glslify('../../../../shaders/glow.frag'),
-			// side: THREE.FrontSide,
+			// side: THREE.BackSide,
 			blending: THREE.AdditiveBlending,
 			transparent: true,
 		});
-		*/
+		
 
 		const mesh = new THREE.Mesh(geometry, material);
 		mesh.castShadow = true;
@@ -192,7 +192,7 @@ export default class Tetrahedron extends InteractiveObject {
 		this.mesh.visible = true;
 
 		TweenMax.to(this.mesh.material, 0.5, { opacity: 1, delay, onComplete: () => {
-			this.mesh.material.transparent = false;
+			// this.mesh.material.transparent = false;
 			this.mesh.geometry.faces[2].color.setHex(origColor);
 			this.mesh.geometry.colorsNeedUpdate = true;
 			this.enabled = true;
