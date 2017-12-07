@@ -9,6 +9,7 @@ import SkyBox from './sky/SkyBox';
 import FilmicPass from './passes/FilmicPass';
 import FilmicMaterial from './materials/FilmicMaterial';
 import Animations from './animations/Animations';
+import AppState from './../../state/AppState';
 
 // TODO remove this to save some bytes
 import DebugShadow from './lights/DebugShadow';
@@ -24,6 +25,8 @@ export default class WebGLView {
 		this.view = view;
 		this.renderer = this.view.renderer;
 
+		this.holdThreshold = 1000;
+
 		this.initThree();
 		this.initControls();
 		this.initInteractive();
@@ -35,6 +38,9 @@ export default class WebGLView {
 		this.initAnimations();
 
 		this.initDebugShadow();
+
+		AppState.goto(0);
+		AppState.on('state:change', this.onStateChange.bind(this));
 	}
 
 	initThree() {
@@ -140,17 +146,6 @@ export default class WebGLView {
 		this.composer = new EffectComposer(this.renderer);
 		this.composer.addPass(new RenderPass(this.scene, this.camera));
 
-		/*
-		const pass = new FilmicPass({
-			// grayscale: false,
-			vignette: true,
-			// eskil: false,
-			vignetteOffset: 0.0,
-			vignetteDarkness: 0.5,
-			noiseIntensity: 0.1,
-			scanlineIntensity: 0.1,
-		});
-		*/
 		this.filmicMaterial = new FilmicMaterial({
 			vignetteOffset: 0.0,
 		});
@@ -240,7 +235,7 @@ export default class WebGLView {
 	onTriangleDown(e) {
 		const tetrahedron = e.target;
 		this.isDown = true;
-		// this.timeDown = Date.now();
+		this.timeDown = Date.now();
 
 		this.animations.start();
 	}
@@ -248,7 +243,12 @@ export default class WebGLView {
 	onTriangleUp(e) {
 		// const tetrahedron = e.target;
 		this.isDown = false;
+		if (Date.now() - this.timeDown > this.holdThreshold) AppState.next();
 
 		this.animations.stop();
+	}
+
+	onStateChange(e) {
+		console.log('WebGLView.onStateChange', e);
 	}
 }
