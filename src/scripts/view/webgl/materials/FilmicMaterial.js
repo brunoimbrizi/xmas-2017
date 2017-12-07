@@ -8,7 +8,7 @@ export default class FilmicMaterial extends ShaderMaterial {
 		const settings = Object.assign({
 			blur: true,
 			dispersion: true,
-			distortion: true,
+			distortion: false,
 			noise: true,
 			scanlines: true,
 			screenMode: true,
