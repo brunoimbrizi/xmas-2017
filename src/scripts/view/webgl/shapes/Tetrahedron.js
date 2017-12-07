@@ -57,30 +57,7 @@ export default class Tetrahedron extends InteractiveObject {
 		const geometry = new THREE.TetrahedronGeometry(this.rc);
 		// const geometry = new THREE.BoxBufferGeometry(this.width, this.height, this.width);
 
-		/*
-		const material = new THREE.MeshLambertMaterial({
-			color: 0xFFFFFF,
-			vertexColors: THREE.FaceColors,
-			// wireframe: true,
-			// transparent: true,
-			// opacity: 0.5,
-		});
-		*/
-
-		
-		const material = new THREE.ShaderMaterial({
-			uniforms: {
-				c: { value: 1.4 },
-				p: { value: 2.4 },
-				color: { value: new THREE.Color(0x0ee7e6) },
-			},
-			vertexShader: glslify('../../../../shaders/glow.vert'),
-			fragmentShader: glslify('../../../../shaders/glow.frag'),
-			// side: THREE.BackSide,
-			blending: THREE.AdditiveBlending,
-			transparent: true,
-		});
-		
+		const material = new THREE.MeshBasicMaterial();
 
 		const mesh = new THREE.Mesh(geometry, material);
 		mesh.castShadow = true;
@@ -314,5 +291,42 @@ export default class Tetrahedron extends InteractiveObject {
 	up() {
 		if (!this.enabled) return;
 		this.emit('tetrahedron:up', { target: this });
+	}
+
+	// ---------------------------------------------------------------------------------------------
+	// EVENT HANDLERS
+	// ---------------------------------------------------------------------------------------------
+
+	onStateChange(e) {
+		// console.log('Tetrahedron.onStateChange', e);
+
+		switch (e.state.index) {
+			default:
+			case 0: {
+				this.mesh.material = new THREE.MeshLambertMaterial({
+					color: 0xFFFFFF,
+					vertexColors: THREE.FaceColors,
+					// wireframe: true,
+					// transparent: true,
+					// opacity: 0.5,
+				});
+				break;
+			}
+			case 1: {
+				this.mesh.material = new THREE.ShaderMaterial({
+					uniforms: {
+						c: { value: 1.4 },
+						p: { value: 2.4 },
+						color: { value: new THREE.Color(0x0ee7e6) },
+					},
+					vertexShader: glslify('../../../../shaders/glow.vert'),
+					fragmentShader: glslify('../../../../shaders/glow.frag'),
+					// side: THREE.BackSide,
+					blending: THREE.AdditiveBlending,
+					transparent: true,
+				});
+				break;
+			}
+		}
 	}
 }

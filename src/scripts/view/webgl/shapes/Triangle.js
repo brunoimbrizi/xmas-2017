@@ -3,6 +3,8 @@ import EventEmitter from 'events';
 
 import Tetrahedron from './Tetrahedron';
 
+import AppState from './../../../state/AppState';
+
 export default class Triangle extends EventEmitter {
 
 	constructor(interactive, audio) {
@@ -17,6 +19,8 @@ export default class Triangle extends EventEmitter {
 		this.initThetahedra();
 
 		this.hide(true);
+
+		AppState.on('state:change', this.onStateChange.bind(this));
 	}
 
 	initData() {
@@ -200,5 +204,12 @@ export default class Triangle extends EventEmitter {
 		this.gotoFace(next);
 
 		this.emit('triangle:up', e);
+	}
+
+	onStateChange(e) {
+		for (let i = 0; i < this.tetrahedra.length; i++) {
+			const tetrahedron = this.tetrahedra[i];
+			tetrahedron.onStateChange(e);
+		}
 	}
 }
