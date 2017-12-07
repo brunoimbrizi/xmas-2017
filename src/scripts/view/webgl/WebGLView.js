@@ -249,6 +249,17 @@ export default class WebGLView {
 	}
 
 	onStateChange(e) {
-		console.log('WebGLView.onStateChange', e);
+		// console.log('WebGLView.onStateChange', e);
+		switch (e.state.index) {
+			default:
+			case 0: {
+				this.filmicMaterial.uniforms.dispersionOffset.value = 0.0;
+				break;
+			}
+			case 1: {
+				this.filmicMaterial.uniforms.dispersionOffset.value = 0.15;
+				break;
+			}
+		}
 	}
 }
