@@ -99,7 +99,7 @@ export default class Triangle extends EventEmitter {
 	}
 
 	getMiddle() {
-		const row = ceil(this.rows * 0.5);
+		const row = floor(this.rows * 0.5);
 		const col = floor(this.cols * 0.5);
 
 		return this.getByRowCol(row, col);
