@@ -35,8 +35,10 @@ export default class AppAudio {
 
 		// jingle bells
 		this.songs.push([
-			'B3', 'B3', 'B3', 'B3', 'B3', 'B3', 'D4', 'G3', 'A3', 'B3',
-			'C4', 'C4', 'C4', 'C4', 'C4', 'B3', 'B3', 'B3', 'B3', 'B3', 'A3', 'A3', 'B3', 'A3', 'D4',
+			'B3', 'B3', 'B3', 'B3', 'B3', 'B3',
+			'B3', 'D4', 'G3', 'A3', 'B3',
+			'C4', 'C4', 'C4', 'C4', 'C4', 'B3', 'B3',
+			'B3', 'B3', 'A3', 'A3', 'B3', 'A3', 'D4',
 		]);
 
 		// so this is christmas
@@ -50,6 +52,14 @@ export default class AppAudio {
 			'A3', 'D4', 'E4', 'F#4', 'E4',
 			'B3', 'E4', 'F#4', 'G4', 'F#4', 'E4',
 			'A3', 'F#4', 'A4', 'F#4', 'E4', 'D4',
+		]);
+
+		// we wish you a merry christmas
+		this.songs.push([
+			'G3', 'C4', 'C4', 'D4', 'C4', 'B3', 'A3', 'F3',
+			'A3', 'D4', 'D4', 'E4', 'D4', 'C4', 'B3', 'G3',
+			'B3', 'E4', 'E4', 'F4', 'E4', 'D4', 'C4', 'A3',
+			'G3', 'G3', 'A3', 'D4', 'B3', 'C4',
 		]);
 	}
 
