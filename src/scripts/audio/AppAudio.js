@@ -1,4 +1,5 @@
 import Tone from 'tone';
+import StartAudioContext from 'startaudiocontext';
 
 import AppState from './../state/AppState';
 
@@ -9,6 +10,8 @@ export default class AppAudio {
 		this.initSongs();
 
 		this.lastNote = 0;
+
+		StartAudioContext(Tone.context, document.querySelector('canvas'));
 
 		AppState.on('state:change', this.onStateChange.bind(this));
 	}
