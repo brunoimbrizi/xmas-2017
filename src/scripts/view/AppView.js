@@ -96,13 +96,6 @@ export default class AppView {
 			if (e.keyCode == 82) { // r
 				this.webgl.controls.reset();
 			}
-			if (e.keyCode == 49) { // 1
-				// this.webgl.camera.rotation.set(0, Math.PI, 0);
-				this.webgl.camera.position.set(300, 0, 0);
-				this.webgl.camera.up.set(0, 1, 0);
-				this.webgl.camera.lookAt(new THREE.Vector3());
-				this.webgl.camera.updateProjectionMatrix();
-			}
 		};
 	}
 

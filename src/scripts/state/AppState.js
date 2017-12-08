@@ -15,7 +15,7 @@ class AppState extends EventEmitter {
 
 	goto(index) {
 		const next = this.states.get(index);
-		
+
 		if (!next) {
 			console.log('AppState.goto index', index, `doesn't exist.`);
 			return false;
@@ -28,6 +28,7 @@ class AppState extends EventEmitter {
 	}
 
 	next() {
+		if (this.state.index === 'knm') return;
 		if (this.state.index < this.states.size - 1) this.goto(this.state.index + 1);
 		else this.goto(0);
 	}
@@ -40,7 +41,7 @@ class AppState extends EventEmitter {
 	knm(active) {
 		if (active) {
 			this.states.set('knm', { index: 'knm' });
-			this.goto(this.states.get('knm').index);
+			this.goto('knm');
 		}
 		else {
 			this.states.delete('knm');

@@ -212,7 +212,7 @@ export default class Triangle extends EventEmitter {
 		// on touch devices, only react to click when it is a quick a tap
 		// if (isTouch() && Date.now() - this.timeDown > this.clickThreshold) return;
 
-		let next = (e && e.target) ? e.target.currFace : 0;
+		let next = (e && e.target) ? e.target.currFace : 1;
 		if (this.getAllSameFace()) next++;
 		
 		this.gotoFace(next);
