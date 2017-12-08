@@ -369,6 +369,11 @@ export default class Tetrahedron extends InteractiveObject {
 					transparent: true,
 				});
 
+				// delayed hide
+				TweenMax.to(this.mesh.scale, 0.6, { x: 0.6, y: 0.6, z: 0.6, delay: this.data.index * 0.01, ease: Quart.easeInOut, onComplete: () => {
+					this.mesh.material.visible = false;
+				} });
+
 				this.outline.visible = true;
 				break;
 			}
