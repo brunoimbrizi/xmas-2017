@@ -168,6 +168,7 @@ export default class Tetrahedron extends InteractiveObject {
 
 		this.mesh.visible = true;
 
+		this.mesh.material.opacity = 0;
 		TweenMax.to(this.mesh.material, 0.5, { opacity: 1, delay, onComplete: () => {
 			// this.mesh.material.transparent = false;
 			this.mesh.geometry.faces[2].color.setHex(origColor);
@@ -306,8 +307,8 @@ export default class Tetrahedron extends InteractiveObject {
 				this.mesh.material = new THREE.MeshLambertMaterial({
 					color: 0xFFFFFF,
 					vertexColors: THREE.FaceColors,
+					transparent: true,
 					// wireframe: true,
-					// transparent: true,
 					// opacity: 0.5,
 				});
 				break;
