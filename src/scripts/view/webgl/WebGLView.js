@@ -39,8 +39,8 @@ export default class WebGLView {
 
 		this.initDebugShadow();
 
-		AppState.goto(0);
 		AppState.on('state:change', this.onStateChange.bind(this));
+		AppState.goto(0);
 	}
 
 	initThree() {
@@ -254,10 +254,23 @@ export default class WebGLView {
 			default:
 			case 0: {
 				this.filmicMaterial.uniforms.dispersionOffset.value = 0.0;
+				this.filmicMaterial.uniforms.noiseIntensity.value = 0.1;
+				this.filmicMaterial.uniforms.scanlineIntensity.value = 0.04;
+				this.bloomPass.kernelSize = 3;
 				break;
 			}
 			case 1: {
+				this.filmicMaterial.uniforms.dispersionOffset.value = 0.0;
+				this.filmicMaterial.uniforms.noiseIntensity.value = 0.08;
+				this.filmicMaterial.uniforms.scanlineIntensity.value = 0.02;
+				this.bloomPass.kernelSize = 1;
+				break;
+			}
+			case 2: {
 				this.filmicMaterial.uniforms.dispersionOffset.value = 0.15;
+				this.filmicMaterial.uniforms.noiseIntensity.value = 0.1;
+				this.filmicMaterial.uniforms.scanlineIntensity.value = 0.04;
+				this.bloomPass.kernelSize = 3;
 				break;
 			}
 		}

@@ -3,6 +3,7 @@ import TweenMax from 'gsap';
 
 import { MeshLine, MeshLineMaterial } from './../../../../vendors/THREE.MeshLine.js';
 
+import AppState from './../../../state/AppState';
 import InteractiveObject from './../interactive/InteractiveObject';
 
 const glslify = require('glslify');
@@ -114,6 +115,7 @@ export default class Tetrahedron extends InteractiveObject {
 			resolution: new THREE.Vector2(window.innerWidth, window.innerHeight),
 			lineWidth: 1,
 			sizeAttenuation: true,
+			color: new THREE.Color(0x000000),
 		});
 
 		/*
@@ -257,9 +259,20 @@ export default class Tetrahedron extends InteractiveObject {
 		if (!this.enabled) return;
 		// console.log('Tetrahedron.over', this.data.index);
 		this.gotoFace(this.currFace + 1);
-		TweenMax.to(this.mesh.position, 0.5, { z: this.offset.z + 10, ease: Quart.easeOut, onStart: () => {
-			// this.mesh.material.visible = true;
-		} });
+
+		switch (AppState.state.index) {
+			default:
+			case 0: {
+				TweenMax.to(this.mesh.position, 0.5, { z: this.offset.z + 10, ease: Quart.easeOut });
+				break;
+			}
+			case 1: {
+				TweenMax.to(this.mesh.scale, 0.5, { x: 0.6, y: 0.6, z: 0.6, ease: Quart.easeOut, onStart: () => {
+					this.mesh.material.visible = true;
+				} });
+				break;
+			}
+		}
 
 		this.emit('tetrahedron:over', { target: this });
 	}
@@ -267,9 +280,20 @@ export default class Tetrahedron extends InteractiveObject {
 	out() {
 		if (!this.enabled) return;
 		// this.gotoFace(this.currFace - 1);
-		TweenMax.to(this.mesh.position, 0.5, { z: this.offset.z + 0, ease: Quart.easeOut, onComplete: () => {
-			// this.mesh.material.visible = false;
-		} });
+
+		switch (AppState.state.index) {
+			default:
+			case 0: {
+				TweenMax.to(this.mesh.position, 0.5, { z: this.offset.z + 0, ease: Quart.easeOut });
+				break;
+			}
+			case 1: {
+				TweenMax.to(this.mesh.scale, 0.5, { x: 1.0, y: 1.0, z: 1.0, ease: Quart.easeOut, onComplete: () => {
+					this.mesh.material.visible = false;
+				} });
+				break;
+			}
+		}
 
 		this.emit('tetrahedron:out', { target: this });
 	}
@@ -305,12 +329,27 @@ export default class Tetrahedron extends InteractiveObject {
 					color: 0xFFFFFF,
 					vertexColors: THREE.FaceColors,
 					transparent: true,
-					// wireframe: true,
-					// opacity: 0.5,
 				});
 				break;
 			}
 			case 1: {
+				this.colors = [];
+				this.colors.push(new THREE.Color(0x0A3704));
+				this.colors.push(new THREE.Color(0x5C8E3C));
+				this.colors.push(new THREE.Color(0x43B828));
+				this.colors.push(new THREE.Color(0xFC0E1D));
+				// this.colors.push(new THREE.Color(0xDC0A17));
+				// this.colors.push(new THREE.Color(0x980E13));
+				this.resetColors();
+
+				this.mesh.material = new THREE.MeshLambertMaterial({
+					color: 0xFFFFFF,
+					vertexColors: THREE.FaceColors,
+					transparent: true,
+				});
+				break;
+			}
+			case 2: {
 				this.mesh.material = new THREE.ShaderMaterial({
 					uniforms: {
 						c: { value: 1.4 },
