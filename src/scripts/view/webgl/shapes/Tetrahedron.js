@@ -34,22 +34,12 @@ export default class Tetrahedron extends InteractiveObject {
 
 		this.object3D = new THREE.Object3D();
 
-		this.initColors();
 		this.initMesh();
 		// this.initBoundingBox();
 		this.initHitArea();
 		// this.initOutline();
 
-		this.resetColors();
 		this.gotoFace(0, 0, true);
-	}
-
-	initColors() {
-		this.colors = [];
-		this.colors.push(new THREE.Color(0x52daab));
-		this.colors.push(new THREE.Color(0xfef7ca));
-		this.colors.push(new THREE.Color(0xfc8781));
-		this.colors.push(new THREE.Color(0x90bda0));
 	}
 
 	initMesh() {
@@ -304,6 +294,13 @@ export default class Tetrahedron extends InteractiveObject {
 		switch (e.state.index) {
 			default:
 			case 0: {
+				this.colors = [];
+				this.colors.push(new THREE.Color(0x52daab));
+				this.colors.push(new THREE.Color(0xfef7ca));
+				this.colors.push(new THREE.Color(0xfc8781));
+				this.colors.push(new THREE.Color(0x90bda0));
+				this.resetColors();
+
 				this.mesh.material = new THREE.MeshLambertMaterial({
 					color: 0xFFFFFF,
 					vertexColors: THREE.FaceColors,
