@@ -44,7 +44,7 @@ export default class WebGLView {
 		AppState.on('state:change', this.onStateChange.bind(this));
 		AppState.goto(0);
 
-		knm.start(this.onKnm);
+		knm.start(this.onKnm.bind(this));
 	}
 
 	initThree() {
@@ -299,6 +299,7 @@ export default class WebGLView {
 				this.bloomPass.kernelSize = 1;
 				break;
 			}
+			case 'knm':
 			case 2: {
 				this.filmicMaterial.uniforms.dispersionOffset.value = 0.15;
 				this.filmicMaterial.uniforms.noiseIntensity.value = 0.1;
@@ -313,6 +314,10 @@ export default class WebGLView {
 	}
 
 	onKnm(active) {
-		console.log('onKnm', active);
+		console.log(active ? 'KONAMI YRSELF CLEAN' : '===================');
+		AppState.knm(active);
+		
+		if (active) this.triangle.onTetrahedronUp();
+		else this.triangle.gotoFace(0);
 	}
 }

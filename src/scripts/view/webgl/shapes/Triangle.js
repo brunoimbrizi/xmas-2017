@@ -35,7 +35,7 @@ export default class Triangle extends EventEmitter {
 
 		let col, row = 0;
 		let index = 0;
-		let str = '\n    ';
+		let str = '\n   ';
 		let data;
 
 		for (let i = 1; i < rows * 2; i += 2) {
@@ -63,7 +63,7 @@ export default class Triangle extends EventEmitter {
 
 				col++;
 			}
-			str = `${str}\n    `;
+			str = `${str}\n   `;
 		}
 		str = `${str}\n`;
 
@@ -212,8 +212,7 @@ export default class Triangle extends EventEmitter {
 		// on touch devices, only react to click when it is a quick a tap
 		// if (isTouch() && Date.now() - this.timeDown > this.clickThreshold) return;
 
-		const tetrahedron = e.target;
-		let next = tetrahedron.currFace;
+		let next = (e && e.target) ? e.target.currFace : 0;
 		if (this.getAllSameFace()) next++;
 		
 		this.gotoFace(next);

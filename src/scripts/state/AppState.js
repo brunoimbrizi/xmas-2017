@@ -37,6 +37,17 @@ class AppState extends EventEmitter {
 		else this.goto(this.states.size - 1);
 	}
 
+	knm(active) {
+		if (active) {
+			this.states.set('knm', { index: 'knm' });
+			this.goto(this.states.get('knm').index);
+		}
+		else {
+			this.states.delete('knm');
+			this.goto(0);	
+		}
+	}
+
 }
 
 export default new AppState();

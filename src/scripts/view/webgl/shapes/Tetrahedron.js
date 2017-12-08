@@ -393,7 +393,7 @@ export default class Tetrahedron extends InteractiveObject {
 				});
 				break;
 			}
-			case 2: {
+			case 'knm': {
 				this.mesh.material = new THREE.ShaderMaterial({
 					uniforms: {
 						c: { value: 1.4 },
