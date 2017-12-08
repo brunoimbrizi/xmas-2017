@@ -22,7 +22,7 @@ export default class Animations {
 				const x = random(-40, 40);
 				const y = random(-30, 30);
 				const z = random(-10, 10) + 50;
-				TweenMax.to(this.camera.position, duration, { x, z, z, ease: Quart.easeOut, onUpdate: () => {
+				TweenMax.to(this.camera.position, duration, { x, y, z, ease: Quart.easeOut, onUpdate: () => {
 					this.camera.lookAt(this.center);
 				} });
 				/*

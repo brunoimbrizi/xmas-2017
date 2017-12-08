@@ -186,14 +186,16 @@ export default class WebGLView {
 	update() {
 		if (this.controls) this.controls.update();
 
-		// zoom
-		this.distance += (this.distanceTarget - this.distance) * 0.1;
-		this.camera.position.z = this.distance;
+		if (isTouch()) {
+			// zoom
+			this.distance += (this.distanceTarget - this.distance) * 0.1;
+			this.camera.position.z = this.distance;
 
-		// if zoomed in enough, snap back
-		if (!this.isZooming && this.distanceTarget < this.swapDistance && this.distance < this.swapDistance) {
-			this.distanceTarget = this.maxDistance;
-			AppState.next();
+			// if zoomed in enough, snap back
+			if (!this.isZooming && this.distanceTarget < this.swapDistance && this.distance < this.swapDistance) {
+				this.distanceTarget = this.maxDistance;
+				AppState.next();
+			}
 		}
 
 		this.filmicMaterial.update(this.clock.getDelta());
