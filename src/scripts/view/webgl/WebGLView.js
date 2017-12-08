@@ -16,6 +16,7 @@ import DebugShadow from './lights/DebugShadow';
 
 import { getParam } from './../../utils/query.utils';
 import { isTouch } from './../../utils/device.utils';
+import { knm } from './../../utils/knm.utils';
 
 const glslify = require('glslify');
 
@@ -42,6 +43,8 @@ export default class WebGLView {
 
 		AppState.on('state:change', this.onStateChange.bind(this));
 		AppState.goto(0);
+
+		knm.start(this.onKnm);
 	}
 
 	initThree() {
@@ -307,5 +310,9 @@ export default class WebGLView {
 
 		document.querySelector('#info a').className = '';
 		document.querySelector('#info a').classList.add(`state-${e.state.index}`);
+	}
+
+	onKnm(active) {
+		console.log('onKnm', active);
 	}
 }
