@@ -42,16 +42,43 @@ export default class AppView {
 			this.webgl.resize();
 		};
 
-		this.sketch.touchstart = () => {
+		this.sketch.touchstart = (e) => {
+			e.preventDefault();
 			if (!this.webgl) return;
 
+			// multiple touches
+			if (this.sketch.touches && this.sketch.touches.length > 1) {
+				const dx = this.sketch.touches[0].x - this.sketch.touches[1].x;
+				const dy = this.sketch.touches[0].y - this.sketch.touches[1].y;
+
+				this.touchZoomDistanceStart = this.touchZoomDistanceEnd = Math.sqrt(dx * dx + dy * dy);
+
+				return;
+			}
+
+			// one touch
 			const touch = this.sketch.touches[0];
 			this.webgl.touchstart(touch);
 		};
 
-		this.sketch.touchmove = () => {
+		this.sketch.touchmove = (e) => {
+			e.preventDefault();
 			if (!this.webgl) return;
 
+			// multiple touches
+			if (this.sketch.touches && this.sketch.touches.length > 1) {
+				const dx = this.sketch.touches[0].x - this.sketch.touches[1].x;
+				const dy = this.sketch.touches[0].y - this.sketch.touches[1].y;
+
+				this.touchZoomDistanceEnd = Math.sqrt(dx * dx + dy * dy);
+				const delta = this.touchZoomDistanceEnd - this.touchZoomDistanceStart;
+				this.touchZoomDistanceStart = this.touchZoomDistanceEnd;
+				this.webgl.zoom(delta);
+
+				return;
+			}
+
+			// one touch
 			const touch = this.sketch.touches[0];
 			this.webgl.touchmove(touch);
 		};
@@ -68,13 +95,6 @@ export default class AppView {
 			// console.log(e.keyCode);
 			if (e.keyCode == 82) { // r
 				this.webgl.controls.reset();
-			}
-			if (e.keyCode == 49) { // 1
-				// this.webgl.camera.rotation.set(0, Math.PI, 0);
-				this.webgl.camera.position.set(300, 0, 0);
-				this.webgl.camera.up.set(0, 1, 0);
-				this.webgl.camera.lookAt(new THREE.Vector3());
-				this.webgl.camera.updateProjectionMatrix();
 			}
 		};
 	}

@@ -10,7 +10,7 @@ export default class UIView {
 		this.camControls = false;
 
 		const material = this.view.webgl.filmicMaterial;
-		this.postEnabled = true;
+		this.postEnabled = !this.view.webgl.low;
 		this.postBlur = material.defines.BLUR || false;
 		this.postDispersion = material.defines.DISPERSION || false;
 		this.postDistortion = material.defines.DISTORTION || false;
