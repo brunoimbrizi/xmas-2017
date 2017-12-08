@@ -1,5 +1,6 @@
 import TweenMax from 'gsap';
 import * as THREE from 'three';
+import bowser from 'bowser';
 import TrackballControls from 'three-trackballcontrols';
 import { EffectComposer, BloomPass, ShaderPass, RenderPass } from 'postprocessing';
 
@@ -16,6 +17,7 @@ import DebugShadow from './lights/DebugShadow';
 
 import { getParam } from './../../utils/query.utils';
 import { isTouch } from './../../utils/device.utils';
+import { runPerformanceTest } from './../../utils/webgl.utils';
 import { knm } from './../../utils/knm.utils';
 
 const glslify = require('glslify');
@@ -28,6 +30,13 @@ export default class WebGLView {
 		this.renderer = this.view.renderer;
 
 		this.holdThreshold = 1000;
+
+		if (bowser.tablet || bowser.mobile) {
+			const debugPerf = getParam('perf') !== '' || app.debug;
+			const threshold = parseInt(getParam('perf'), 10) || 220;
+			const perf = runPerformanceTest(threshold, debugPerf);
+			if (perf > threshold) this.low = true;
+		}
 
 		this.initThree();
 		this.initControls();
@@ -49,10 +58,13 @@ export default class WebGLView {
 
 	initThree() {
 		// this.renderer.sortObjects = false;
+		this.renderer.setPixelRatio(1);
 
-		this.renderer.shadowMap.enabled = true;
-		this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-		// this.renderer.setPixelRatio(window.devicePixelRatio || 1);
+		if (!this.low) {
+			this.renderer.shadowMap.enabled = true;
+			this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+			this.renderer.setPixelRatio(window.devicePixelRatio || 1);
+		}
 
 		// scene
 		this.scene = new THREE.Scene();
