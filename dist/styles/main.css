@@ -3,3 +3,39 @@ body {
 	overflow: hidden;
 	background-color: #222;
 }
+
+a {
+	text-decoration: none;
+	opacity: 0.7;
+	color: #666666;
+	transition: opacity 0.3s;
+}
+
+a:hover {
+	opacity: 1;
+}
+
+a.state-0 {
+	color: #666666;
+}
+
+a.state-1 {
+	color: #666666;
+}
+
+a.state-2 {
+	color: #B3B173;
+}
+
+#info {
+	position: absolute;
+	bottom: 20px;
+	right: 20px;
+
+	font-family: sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	color: #CCCCCC;
+}
+
+

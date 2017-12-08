@@ -40,7 +40,7 @@ export default class WebGLView {
 		this.initDebugShadow();
 
 		AppState.on('state:change', this.onStateChange.bind(this));
-		AppState.goto(1);
+		AppState.goto(0);
 	}
 
 	initThree() {
@@ -257,6 +257,7 @@ export default class WebGLView {
 				this.filmicMaterial.uniforms.noiseIntensity.value = 0.1;
 				this.filmicMaterial.uniforms.scanlineIntensity.value = 0.04;
 				this.bloomPass.kernelSize = 3;
+
 				break;
 			}
 			case 1: {
@@ -274,5 +275,8 @@ export default class WebGLView {
 				break;
 			}
 		}
+
+		document.querySelector('#info a').className = '';
+		document.querySelector('#info a').classList.add(`state-${e.state.index}`);
 	}
 }
