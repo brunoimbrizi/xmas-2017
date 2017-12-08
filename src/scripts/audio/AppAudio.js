@@ -17,11 +17,12 @@ export default class AppAudio {
 	}
 
 	initSynth() {
-		this.synth = new Tone.PolySynth(6, Tone.SimpleSynth, {
+		this.synth = new Tone.PolySynth(4, Tone.Synth, {
 			oscillator : {
 				partials : [3, 2, 1, 0],
 				volume : -10,
-				// type: 'sine',
+				type: 'triangle',
+				// type: 'amsine',
 			},
 
 			envelope : {
@@ -85,6 +86,8 @@ export default class AppAudio {
 	// ---------------------------------------------------------------------------------------------
 
 	onStateChange(e) {
+		let oscillatorType = 'triangle';
+
 		switch (e.state.index) {
 			default:
 			case 0: {
@@ -93,12 +96,18 @@ export default class AppAudio {
 			}
 			case 1: {
 				this.song = this.songs[1];
+				oscillatorType = 'amsine';
 				break;
 			}
 			case 2: {
 				this.song = this.songs[2];
+				oscillatorType = 'amtriangle';
 				break;
 			}
+		}
+
+		for (let i = 0; i < this.synth.voices.length; i++) {
+			this.synth.voices[i].oscillator.type = oscillatorType;
 		}
 
 		this.lastNote = 0;
