@@ -40,7 +40,7 @@ export default class WebGLView {
 		this.initDebugShadow();
 
 		AppState.on('state:change', this.onStateChange.bind(this));
-		AppState.goto(0);
+		AppState.goto(1);
 	}
 
 	initThree() {

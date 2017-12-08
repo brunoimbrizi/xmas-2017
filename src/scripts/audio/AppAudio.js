@@ -92,6 +92,10 @@ export default class AppAudio {
 				this.song = this.songs[1];
 				break;
 			}
+			case 2: {
+				this.song = this.songs[2];
+				break;
+			}
 		}
 
 		this.lastNote = 0;

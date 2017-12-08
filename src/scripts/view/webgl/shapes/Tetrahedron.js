@@ -38,7 +38,7 @@ export default class Tetrahedron extends InteractiveObject {
 		this.initMesh();
 		// this.initBoundingBox();
 		this.initHitArea();
-		// this.initOutline();
+		this.initOutline();
 
 		this.gotoFace(0, 0, true);
 	}
@@ -108,6 +108,7 @@ export default class Tetrahedron extends InteractiveObject {
 		geometry.vertices.push(new THREE.Vector3(-this.width * 0.5, -this.height * 0.5));
 		geometry.vertices.push(new THREE.Vector3(0, this.height * 0.5));
 
+		/*
 		const line = new MeshLine();
 		line.setGeometry(geometry);
 
@@ -115,17 +116,24 @@ export default class Tetrahedron extends InteractiveObject {
 			resolution: new THREE.Vector2(window.innerWidth, window.innerHeight),
 			lineWidth: 1,
 			sizeAttenuation: true,
-			color: new THREE.Color(0x000000),
+			color: new THREE.Color(0x333333),
 		});
-
-		/*
-		const material = new THREE.LineBasicMaterial({
-			color: 0xFFFFFF,
-			linewidth: 10,
-		});
-		*/
-
+		
 		this.outline = new THREE.Mesh(line.geometry, material);
+		*/
+		
+		const material = new THREE.LineBasicMaterial({
+			color: 0x333333,
+			linewidth: 1,
+			transparent: true,
+			opacity: 0.5,
+			// blending: THREE.AdditiveBlending,
+		});
+
+		this.outline = new THREE.Line(geometry, material);
+		
+		
+		this.outline.visible = false;
 		this.object3D.add(this.outline);
 
 		// offset
@@ -315,6 +323,14 @@ export default class Tetrahedron extends InteractiveObject {
 	onStateChange(e) {
 		// console.log('Tetrahedron.onStateChange', e);
 
+		// reset position and size
+		TweenMax.killTweensOf(this.mesh.position);
+		TweenMax.killTweensOf(this.mesh.scale);
+		this.mesh.position.z = this.offset.z;
+		this.mesh.scale.set(1, 1, 1);
+		this.mesh.material.visible = true;
+		this.outline.visible = false;
+
 		switch (e.state.index) {
 			default:
 			case 0: {
@@ -340,6 +356,28 @@ export default class Tetrahedron extends InteractiveObject {
 				this.colors.push(new THREE.Color(0xFC0E1D));
 				// this.colors.push(new THREE.Color(0xDC0A17));
 				// this.colors.push(new THREE.Color(0x980E13));
+
+				// this.colors.push(new THREE.Color(0x84C37D));
+				// this.colors.push(new THREE.Color(0x487F46));
+				// this.colors.push(new THREE.Color(0xFA2F4D));
+				// this.colors.push(new THREE.Color(0xEBF2BD));
+				this.resetColors();
+
+				this.mesh.material = new THREE.MeshLambertMaterial({
+					color: 0xFFFFFF,
+					vertexColors: THREE.FaceColors,
+					transparent: true,
+				});
+
+				this.outline.visible = true;
+				break;
+			}
+			case 2: {
+				this.colors = [];
+				this.colors.push(new THREE.Color(0xAC1015));
+				this.colors.push(new THREE.Color(0xB3B173));
+				this.colors.push(new THREE.Color(0x7A7937));
+				this.colors.push(new THREE.Color(0x595C2E));
 				this.resetColors();
 
 				this.mesh.material = new THREE.MeshLambertMaterial({

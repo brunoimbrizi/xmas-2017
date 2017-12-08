@@ -44,6 +44,10 @@ export default class SkyBox {
 				this.object3D.material.color.setHex(0xE9EAEC);
 				break;
 			}
+			case 2: {
+				this.object3D.material.color.setHex(0x7C0B08);
+				break;
+			}
 		}
 	}
 }

@@ -10,6 +10,7 @@ class AppState extends EventEmitter {
 		this.states = new Map();
 		this.states.set(this.states.size, { index: this.states.size });
 		this.states.set(this.states.size, { index: this.states.size });
+		this.states.set(this.states.size, { index: this.states.size });
 	}
 
 	goto(index) {
