@@ -54,6 +54,7 @@ export default class WebGLView {
 		AppState.goto(0);
 
 		knm.start(this.onKnm.bind(this));
+		if (getParam('knm') !== '') this.onKnm(true);
 	}
 
 	initThree() {
