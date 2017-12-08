@@ -4,6 +4,7 @@ import EventEmitter from 'events';
 import Tetrahedron from './Tetrahedron';
 
 import AppState from './../../../state/AppState';
+import { isTouch } from './../../../utils/device.utils';
 
 export default class Triangle extends EventEmitter {
 
@@ -12,6 +13,8 @@ export default class Triangle extends EventEmitter {
 
 		this.interactive = interactive;
 		this.audio = audio;
+
+		this.clickThreshold = 200;
 
 		this.object3D = new THREE.Object3D;
 
@@ -167,6 +170,13 @@ export default class Triangle extends EventEmitter {
 		}
 	}
 
+	out() {
+		for (let i = 0; i < this.tetrahedra.length; i++) {
+			const tetrahedron = this.tetrahedra[i];
+			if (tetrahedron.isOver) tetrahedron.out();
+		}
+	}
+
 	// ---------------------------------------------------------------------------------------------
 	// EVENT LISTENERS
 	// ---------------------------------------------------------------------------------------------
@@ -188,6 +198,8 @@ export default class Triangle extends EventEmitter {
 	onTetrahedronDown(e) {
 		if (!this.firstUp) return;
 		this.emit('triangle:down', e);
+
+		this.timeDown = Date.now();
 	}
 
 	onTetrahedronUp(e) {
@@ -196,6 +208,9 @@ export default class Triangle extends EventEmitter {
 			this.show();
 			return;
 		}
+
+		// on touch devices, only react to click when it is a quick a tap
+		// if (isTouch() && Date.now() - this.timeDown > this.clickThreshold) return;
 
 		const tetrahedron = e.target;
 		let next = tetrahedron.currFace;

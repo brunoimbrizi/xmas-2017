@@ -15,6 +15,7 @@ import AppState from './../../state/AppState';
 import DebugShadow from './lights/DebugShadow';
 
 import { getParam } from './../../utils/query.utils';
+import { isTouch } from './../../utils/device.utils';
 
 const glslify = require('glslify');
 
@@ -66,6 +67,11 @@ export default class WebGLView {
 		this.camera = this.perspCamera;
 
 		this.center = new THREE.Vector3();
+
+		this.minDistance = 50;
+		this.maxDistance = 200;
+		this.swapDistance = 60;
+		this.distance = this.distanceTarget = this.camera.position.z = this.maxDistance;
 	}
 
 	initControls() {
@@ -177,6 +183,16 @@ export default class WebGLView {
 	update() {
 		if (this.controls) this.controls.update();
 
+		// zoom
+		this.distance += (this.distanceTarget - this.distance) * 0.1;
+		this.camera.position.z = this.distance;
+
+		// if zoomed in enough, snap back
+		if (!this.isZooming && this.distanceTarget < this.swapDistance && this.distance < this.swapDistance) {
+			this.distanceTarget = this.maxDistance;
+			AppState.next();
+		}
+
 		this.filmicMaterial.update(this.clock.getDelta());
 		this.triangle.update();
 	}
@@ -190,6 +206,14 @@ export default class WebGLView {
 
 	show() {
 		this.triangle.show();
+	}
+
+	zoom(delta) {
+		this.distanceTarget -= delta;
+		this.distanceTarget = this.distanceTarget > this.maxDistance ? this.maxDistance : this.distanceTarget;
+		this.distanceTarget = this.distanceTarget < this.minDistance ? this.minDistance : this.distanceTarget;
+
+		this.isZooming = true;
 	}
 
 	// ---------------------------------------------------------------------------------------------
@@ -226,14 +250,18 @@ export default class WebGLView {
 	}
 
 	touchend() {
-		this.interactive.touchend();
+		this.isZooming = false;
 
-		// TODO improve this
-		// this.onTriangleUp();
+		if (isTouch()) {
+			this.triangle.out();
+		}
+
+		this.interactive.touchend();
 	}
 
 	onTriangleDown(e) {
-		const tetrahedron = e.target;
+		if (isTouch()) return;
+
 		this.isDown = true;
 		this.timeDown = Date.now();
 
@@ -241,10 +269,11 @@ export default class WebGLView {
 	}
 
 	onTriangleUp(e) {
-		// const tetrahedron = e.target;
+		if (isTouch()) return;
+		
 		this.isDown = false;
-		if (Date.now() - this.timeDown > this.holdThreshold) AppState.next();
 
+		if (Date.now() - this.timeDown > this.holdThreshold) AppState.next();
 		this.animations.stop();
 	}
 

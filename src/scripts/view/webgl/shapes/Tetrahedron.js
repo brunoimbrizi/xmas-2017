@@ -265,7 +265,8 @@ export default class Tetrahedron extends InteractiveObject {
 
 	over() {
 		if (!this.enabled) return;
-		// console.log('Tetrahedron.over', this.data.index);
+		this.isOver = true;
+
 		this.gotoFace(this.currFace + 1);
 
 		switch (AppState.state.index) {
@@ -287,7 +288,7 @@ export default class Tetrahedron extends InteractiveObject {
 
 	out() {
 		if (!this.enabled) return;
-		// this.gotoFace(this.currFace - 1);
+		this.isOver = false;
 
 		switch (AppState.state.index) {
 			default:
