@@ -192,7 +192,7 @@ export default class Tetrahedron extends InteractiveObject {
 		} });
 	}
 
-	gotoFace(index, delay = 0, immediate = false) {
+	gotoFace(index, delay = 0, immediate = false, duration = 0.5) {
 		this.currFace = index;
 		
 		let x, y, z;
@@ -256,7 +256,7 @@ export default class Tetrahedron extends InteractiveObject {
 			return;
 		}
 
-		TweenMax.to(this.mesh.rotation, 0.5, { x, y, z, delay, ease: Quad.easeOut });
+		TweenMax.to(this.mesh.rotation, duration, { x, y, z, delay, ease: Quad.easeOut });
 	}
 
 	// ---------------------------------------------------------------------------------------------

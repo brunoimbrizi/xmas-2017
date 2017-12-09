@@ -314,9 +314,15 @@ export default class WebGLView {
 				this.bloomPass.kernelSize = 1;
 				break;
 			}
-			case 'knm':
 			case 2: {
 				this.filmicMaterial.uniforms.dispersionOffset.value = 0.15;
+				this.filmicMaterial.uniforms.noiseIntensity.value = 0.1;
+				this.filmicMaterial.uniforms.scanlineIntensity.value = 0.04;
+				this.bloomPass.kernelSize = 3;
+				break;
+			}
+			case 'knm': {
+				this.filmicMaterial.uniforms.dispersionOffset.value = 0.2;
 				this.filmicMaterial.uniforms.noiseIntensity.value = 0.1;
 				this.filmicMaterial.uniforms.scanlineIntensity.value = 0.04;
 				this.bloomPass.kernelSize = 3;

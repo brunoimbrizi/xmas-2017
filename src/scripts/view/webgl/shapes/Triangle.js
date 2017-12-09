@@ -104,55 +104,76 @@ export default class Triangle extends EventEmitter {
 
 	mapNotes() {
 		this.noteMap = new Map();
-		this.noteMap.set('E3', this.tetrahedra[0]);
-		this.noteMap.set('C#3', this.tetrahedra[2]);
+		// this.noteMap.set('E3', this.tetrahedra[0]);
+		// this.noteMap.set('C#3', this.tetrahedra[2]);
 
 		this.noteMap.set('E5', this.tetrahedra[4]);
 		this.noteMap.set('F5', this.tetrahedra[8]);
 		this.noteMap.set('C#4', this.tetrahedra[20]);
 
-		this.noteMap.set('G#4', this.tetrahedra[9]);
-		this.noteMap.set('F#4', this.tetrahedra[10]);
-		this.noteMap.set('E4', this.tetrahedra[11]);
-		this.noteMap.set('B4', this.tetrahedra[6]);
-		this.noteMap.set('C5', this.tetrahedra[7]);
+		this.noteMap.set('G#4', this.tetrahedra[10]);
+		this.noteMap.set('F#4', this.tetrahedra[5]);
+		this.noteMap.set('E4', this.tetrahedra[12]);
+		this.noteMap.set('B4', this.tetrahedra[7]);
+		this.noteMap.set('C5', this.tetrahedra[14]);
 
-		this.noteMap.set('E4-0', this.tetrahedra[36]);
-		this.noteMap.set('E4-1', this.tetrahedra[37]);
-		this.noteMap.set('E4-2', this.tetrahedra[38]);
-		this.noteMap.set('E4-3', this.tetrahedra[39]);
-		this.noteMap.set('E4-4', this.tetrahedra[43]);
-		this.noteMap.set('E4-5', this.tetrahedra[44]);
-		this.noteMap.set('E4-6', this.tetrahedra[45]);
-		this.noteMap.set('E4-7', this.tetrahedra[46]);
-		this.noteMap.set('E4-8', this.tetrahedra[47]);
-		this.noteMap.set('E4-9', this.tetrahedra[48]);
+		this.noteMap.set('E4-0', this.tetrahedra[25]);
+		this.noteMap.set('E4-1', this.tetrahedra[26]);
+		this.noteMap.set('E4-2', this.tetrahedra[27]);
+		this.noteMap.set('E4-3', this.tetrahedra[28]);
+		this.noteMap.set('E4-4', this.tetrahedra[30]);
+		this.noteMap.set('E4-5', this.tetrahedra[31]);
+		this.noteMap.set('E4-6', this.tetrahedra[32]);
+		this.noteMap.set('E4-7', this.tetrahedra[33]);
+		this.noteMap.set('E4-8', this.tetrahedra[34]);
+		this.noteMap.set('E4-9', this.tetrahedra[35]);
 
-		this.noteMap.set('D#4-0', this.tetrahedra[29]);
-		this.noteMap.set('D#4-1', this.tetrahedra[30]);
-		this.noteMap.set('D#4-2', this.tetrahedra[31]);
-		this.noteMap.set('D#4-3', this.tetrahedra[32]);
+		this.noteMap.set('D#4-0', this.tetrahedra[11]);
+		this.noteMap.set('D#4-1', this.tetrahedra[12]);
+		this.noteMap.set('D#4-2', this.tetrahedra[13]);
+		this.noteMap.set('D#4-3', this.tetrahedra[14]);
 
-		this.noteMap.set('C#4-0', this.tetrahedra[16]);
+		this.noteMap.set('C#4-0', this.tetrahedra[17]);
 		this.noteMap.set('C#4-1', this.tetrahedra[17]);
-		this.noteMap.set('C#4-2', this.tetrahedra[18]);
-		this.noteMap.set('C#4-3', this.tetrahedra[19]);
+		this.noteMap.set('C#4-2', this.tetrahedra[19]);
+		this.noteMap.set('C#4-3', this.tetrahedra[20]);
 		this.noteMap.set('C#4-4', this.tetrahedra[21]);
 		this.noteMap.set('C#4-5', this.tetrahedra[22]);
 
-		this.noteMap.set('C4-0', this.tetrahedra[35]);
-		this.noteMap.set('C4-1', this.tetrahedra[34]);
-		this.noteMap.set('C4-2', this.tetrahedra[24]);
-		this.noteMap.set('C4-3', this.tetrahedra[23]);
-		this.noteMap.set('C4-4', this.tetrahedra[15]);
+		this.noteMap.set('C4-0', this.tetrahedra[4]);
+		this.noteMap.set('C4-1', this.tetrahedra[5]);
+		this.noteMap.set('C4-2', this.tetrahedra[6]);
+		this.noteMap.set('C4-3', this.tetrahedra[7]);
+		this.noteMap.set('C4-4', this.tetrahedra[8]);
 
 		this.noteMap.set('G#3', this.tetrahedra[42]);
 
-		this.noteMap.set('B2', this.tetrahedra[41]);
+		this.noteMap.set('B2', this.tetrahedra[36]);
+
+		const outerIndices = [0, 1, 2, 3, 4, 5, 9, 10, 16, 17, 25, 26, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 7, 8, 14, 15, 23, 24, 34, 35];
+		const outer = [];
+		for (let i = 0; i < outerIndices.length; i++) {
+			outer.push(this.tetrahedra[outerIndices[i]]);
+		}
+		this.noteMap.set('outer', outer);
+
+		const inner = [];
+		for (let i = 0; i < this.tetrahedra.length; i++) {
+			let hit = false;
+			for (let j = 0; j < outerIndices.length; j++) {
+				if (i == outerIndices[j]) {
+					hit = true;
+					break;
+				}
+			}
+			if (!hit) inner.push(this.tetrahedra[i]);
+		}
+		this.noteMap.set('inner', inner);
 	}
 
 	noteOn(note, isPercussion) {
 		let name = note.name;
+		const duration = max(note.duration, 0.4);
 
 		if (isPercussion) {
 			if (name == 'E4') {
@@ -179,9 +200,23 @@ export default class Triangle extends EventEmitter {
 				this.c4count++;
 			}
 		}
+
+		if (name == 'E3') {
+			const group = this.noteMap.get('outer');
+			for (let i = 0; i < group.length; i++) {
+				group[i].gotoFace(group[i].currFace + 1, 0, false, duration);
+			}
+		}
+
+		if (name == 'C#3') {
+			const group = this.noteMap.get('inner');
+			for (let i = 0; i < group.length; i++) {
+				group[i].gotoFace(group[i].currFace + 1, 0, false, duration);
+			}
+		}
 		
 		const tetrahedron = this.noteMap.get(name);
-		if (tetrahedron) tetrahedron.gotoFace(tetrahedron.currFace + 1);
+		if (tetrahedron) tetrahedron.gotoFace(tetrahedron.currFace + 1, 0, false, duration);
 	}
 
 	getMiddle() {
