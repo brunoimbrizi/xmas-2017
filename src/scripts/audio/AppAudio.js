@@ -22,17 +22,17 @@ export default class AppAudio {
 	initSynth() {
 		this.synth = new Tone.PolySynth(4, Tone.Synth, {
 			oscillator : {
-				partials : [3, 2, 1, 0],
-				volume : -10,
+				// partials : [3, 2, 1, 0],
+				partials : [0, 2, 3, 4],
+				// volume : -10,
 				type: 'triangle',
-				// type: 'amsine',
 			},
 
 			envelope : {
 				attack : 0.01,
 				decay: 0.5,
 				sustain: 0.4,
-				// release: 1.8,
+				release: 1.8,
 			}
 		} ).toMaster();
 		
@@ -54,16 +54,24 @@ export default class AppAudio {
 	}
 
 	initMidi() {
-		MidiConvert.load('audio/3819126.mid', (midi) => {
+		MidiConvert.load('audio/1512777028056.mid', (midi) => {
 			Tone.Transport.bpm.value = midi.header.bpm;
+
+			// sorry mom
+			const triangle = app.view.webgl.triangle;
+
+			const offset = 0;
 
 			new Tone.Part((time, note) => {
 				this.percussion.triggerAttackRelease(note.name, note.duration, time, note.velocity);
-			}, midi.tracks[3].notes).start(0);
+				triangle.noteOn(note, true);
+			}, midi.tracks[3].notes).start(0, offset);
 
 			new Tone.Part((time, note) => {
+				// note.name = this.bumpOctave(note.name);
 				this.synth.triggerAttackRelease(note.name, note.duration, time, note.velocity);
-			}, midi.tracks[1].notes).start(0);
+				triangle.noteOn(note);
+			}, midi.tracks[1].notes).start(0, offset);
 
 			// start the transport to hear the events
 			Tone.Transport.start();
@@ -110,6 +118,7 @@ export default class AppAudio {
 
 	playNote(note) {
 		note = this.song[this.lastNote];
+		if (!note) return;
 		this.lastNote = (this.lastNote < this.song.length - 1) ? this.lastNote + 1 : 0;
 		this.synth.triggerAttackRelease(note, '32n');
 	}
@@ -118,12 +127,18 @@ export default class AppAudio {
 		// this.synth.triggerRelease(note);
 	}
 
+	bumpOctave(noteName) {
+		const octave = parseInt(noteName.substr(noteName.length - 1));
+		return `${noteName.substr(0, noteName.length - 1)}${octave + 1}`;
+	}
+
 	// ---------------------------------------------------------------------------------------------
 	// EVENT HANDLERS
 	// ---------------------------------------------------------------------------------------------
 
 	onStateChange(e) {
 		let oscillatorType = 'triangle';
+		let envelopeAttack = 0.01;
 
 		switch (e.state.index) {
 			default:
@@ -141,10 +156,17 @@ export default class AppAudio {
 				oscillatorType = 'amtriangle';
 				break;
 			}
+			case 'knm': {
+				this.song = [];
+				this.initMidi();
+				envelopeAttack = 0.1;
+				break;
+			}
 		}
 
 		for (let i = 0; i < this.synth.voices.length; i++) {
 			this.synth.voices[i].oscillator.type = oscillatorType;
+			this.synth.voices[i].envelope.attack = envelopeAttack;
 		}
 
 		this.lastNote = 0;
