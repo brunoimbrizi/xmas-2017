@@ -13,7 +13,7 @@ import Animations from './animations/Animations';
 import AppState from './../../state/AppState';
 
 // TODO remove this to save some bytes
-import DebugShadow from './lights/DebugShadow';
+// import DebugShadow from './lights/DebugShadow';
 
 import { getParam } from './../../utils/query.utils';
 import { isTouch } from './../../utils/device.utils';

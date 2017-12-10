@@ -1,5 +1,5 @@
-import ControlKit from 'controlkit';
-import Stats from 'stats.js';
+// import ControlKit from 'controlkit';
+// import Stats from 'stats.js';
 
 export default class UIView {
 
