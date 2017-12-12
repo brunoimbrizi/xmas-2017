@@ -342,5 +342,7 @@ export default class WebGLView {
 		
 		if (active) this.triangle.onTetrahedronUp();
 		else this.triangle.gotoFace(0);
+
+		if (active) document.querySelector('.knm').innerHTML = '▲ ▲ ▲ ▲ ▲ ▲';
 	}
 }

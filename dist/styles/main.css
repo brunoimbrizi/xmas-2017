@@ -39,6 +39,10 @@ a:hover {
 	color: #7A7937;
 }
 
+#ui.state-knm .info a {
+	color: #0ee7e6;
+}
+
 .btn-info {
 	position: absolute;
 	bottom: 20px;
