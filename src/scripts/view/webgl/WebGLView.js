@@ -32,6 +32,8 @@ export default class WebGLView {
 		this.holdThreshold = 1000;
 
 		if (bowser.tablet || bowser.mobile) {
+			document.querySelector('body').classList.add('mobile');
+
 			const debugPerf = getParam('perf') !== '' || app.debug;
 			const threshold = parseInt(getParam('perf'), 10) || 220;
 			const perf = runPerformanceTest(threshold, debugPerf);
@@ -330,8 +332,8 @@ export default class WebGLView {
 			}
 		}
 
-		document.querySelector('#info a').className = '';
-		document.querySelector('#info a').classList.add(`state-${e.state.index}`);
+		document.querySelector('#ui').className = '';
+		document.querySelector('#ui').classList.add(`state-${e.state.index}`);
 	}
 
 	onKnm(active) {
