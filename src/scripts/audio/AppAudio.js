@@ -140,6 +140,8 @@ export default class AppAudio {
 		let oscillatorType = 'triangle';
 		let envelopeAttack = 0.01;
 
+		if (Tone.Transport.state === 'started') Tone.Transport.stop();
+
 		switch (e.state.index) {
 			default:
 			case 0: {
