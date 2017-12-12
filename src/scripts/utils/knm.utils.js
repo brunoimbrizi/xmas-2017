@@ -1,5 +1,12 @@
 class Knm {
-	
+
+	set active(value) {
+		this.knm.active = value;
+		if (this.callback) this.callback(this.knm.active);
+	}
+
+	get active() { return this.knm.active; }
+
 	constructor() {
 		this.knm = {};
 		this.knm.input = '';
@@ -24,8 +31,8 @@ class Knm {
 	onKeyUp(e) {
 		this.knm.input += e.keyCode;
 		if (this.knm.input === '38384040373937396665') {
-			this.knm.active = !this.knm.active;
-			this.callback(this.knm.active);
+			this.active = !this.knm.active;
+			// this.callback(this.knm.active);
 		}
 
 		clearTimeout(this.knm.timeout);
