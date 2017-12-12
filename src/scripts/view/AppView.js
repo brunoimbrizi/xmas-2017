@@ -26,6 +26,7 @@ export default class AppView {
 		this.sketch.setup = () => {
 			this.initWebGL();
 			this.initUI();
+			this.initInfo();
 		};
 
 		this.sketch.update = () => {
@@ -108,5 +109,22 @@ export default class AppView {
 
 	initUI() {
 		this.ui = new UIView(this);
+	}
+
+	initInfo() {
+		const btn = document.querySelector('.btn-info a');
+		const info = document.querySelector('.info');
+		
+		btn.addEventListener('click', (e) => {
+			e.preventDefault();
+
+			if (info.classList.contains('open')) {
+				info.classList.remove('open');
+				btn.innerHTML = 'INFO';
+			} else {
+				info.classList.add('open');
+				btn.innerHTML = 'CLOSE';
+			}
+		});
 	}
 }

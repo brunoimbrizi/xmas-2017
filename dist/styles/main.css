@@ -15,19 +15,31 @@ a:hover {
 	opacity: 1;
 }
 
-a.state-0 {
+#ui.state-0 .btn-info a {
 	color: #666666;
 }
 
-a.state-1 {
+#ui.state-1 .btn-info a {
 	color: #666666;
 }
 
-a.state-2 {
+#ui.state-2 .btn-info a {
 	color: #7A7937;
 }
 
-#info {
+#ui.state-0 .info a {
+	color: #52daab;
+}
+
+#ui.state-1 .info a {
+	color: #FC0E1D;
+}
+
+#ui.state-2 .info a {
+	color: #7A7937;
+}
+
+.btn-info {
 	position: absolute;
 	bottom: 20px;
 	right: 20px;
@@ -36,6 +48,65 @@ a.state-2 {
 	font-size: 11px;
 	font-weight: bold;
 	color: #CCCCCC;
+
+	z-index: 999;
+}
+
+.btn-info a {
+	padding: 10px;
+}
+
+.info {
+	position: absolute;
+    top: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.8);
+    color: rgba(255, 255, 255, 0.3);
+    height: 100%;
+    font-size: 14px;
+    font-family: sans-serif;
+    display: flex;
+	justify-content: center;
+	align-items: center;
+	transform: translate3d(100%, 0, 0);
+	transition: transform 0.4s ease-in-out;
+}
+
+.info.open {
+	transform: translate3d(0, 0, 0);
+}
+
+.info-wrapper {
+	padding: 150px 140px 150px 160px;
+}
+
+.info .block {
+	margin-top: 50px;
+}
+.info .block:nth-child(1) {
+	margin-top: 0;
+}
+
+h3 {
+	font-size: 13px;
+	color: #999;
+}
+
+p {
+	margin: 6px auto;
+}
+
+p.mobile { display: none; }
+body.mobile p.desktop { display: none; }
+body.mobile p.mobile { display: block; }
+
+@media (max-width: 800px) {
+	.info { width: 100%; background: black; }
+	.info-wrapper { padding: 0; }
+}
+
+@media (max-height: 400px) {
+	.info .block { margin: 10px 50px; float: left; }
 }
 
 
